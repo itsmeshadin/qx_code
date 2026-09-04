@@ -13,7 +13,7 @@ s.textContent=`
   align-items:center!important;
   gap:3px!important;
   color:#0faf59!important;
-  font-size:11px!important;
+  font-size:12px!important;
   font-weight:700!important;
   line-height:16px!important;
   font-family:inherit!important;
@@ -24,7 +24,7 @@ s.textContent=`
   color:#0faf59!important;
   font-size:9px!important;
   font-weight:600!important;
-  line-height:14px!important;
+  line-height:16px!important;
 }
 
 .qx-level-icon{
