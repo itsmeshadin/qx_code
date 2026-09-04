@@ -22,8 +22,8 @@ s.textContent=`
 
 .qx-live-box span{
   color:#0faf59!important;
-  font-size:11px!important;
-  font-weight:700!important;
+  font-size:10px!important;
+  font-weight:600!important;
   line-height:16px!important;
 }
 
