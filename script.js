@@ -13,7 +13,7 @@ s.textContent=`
   align-items:center!important;
   gap:3px!important;
   color:#0faf59!important;
-  font-size:10px!important;
+  font-size:11px!important;
   font-weight:700!important;
   line-height:16px!important;
   font-family:inherit!important;
@@ -28,8 +28,8 @@ s.textContent=`
 }
 
 .qx-level-icon{
-  width:14px!important;
-  height:14px!important;
+  width:16px!important;
+  height:16px!important;
   display:inline-block!important;
   flex:none!important;
 }
