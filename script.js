@@ -13,7 +13,7 @@ s.textContent=`
   align-items:center!important;
   gap:3px!important;
   color:#0faf59!important;
-  font-size:12px!important;
+  font-size:10px!important;
   font-weight:700!important;
   line-height:16px!important;
   font-family:inherit!important;
@@ -22,14 +22,14 @@ s.textContent=`
 
 .qx-live-box span{
   color:#0faf59!important;
-  font-size:10px!important;
+  font-size:9px!important;
   font-weight:600!important;
-  line-height:16px!important;
+  line-height:14px!important;
 }
 
 .qx-level-icon{
-  width:16px!important;
-  height:16px!important;
+  width:14px!important;
+  height:14px!important;
   display:inline-block!important;
   flex:none!important;
 }
