@@ -13,7 +13,7 @@ s.textContent=`
   align-items:center!important;
   gap:3px!important;
   color:#0faf59!important;
-  font-size:11px!important;
+  font-size:12px!important;
   font-weight:700!important;
   line-height:16px!important;
   font-family:inherit!important;
