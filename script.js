@@ -22,14 +22,14 @@ s.textContent=`
 
 .qx-live-box span{
   color:#0faf59!important;
-  font-size:9px!important;
+  font-size:12px!important;
   font-weight:600!important;
-  line-height:14px!important;
+  line-height:16px!important;
 
 }
 
 .qx-level-icon{
-  width:14px!important;
+  width:16px!important;
   height:16px!important;
   display:inline-block!important;
   flex:none!important;
