@@ -32,6 +32,7 @@ s.textContent=`
   height: 14px!important;
   display: inline-block!important;
   flex: none!important;
+  margin-left: -4px!important;
   margin-right: 6px!important;
   vertical-align: middle!important;
   
