@@ -22,15 +22,15 @@ s.textContent=`
 
 .qx-live-box span{
   color:#0faf59!important;
-  font-size:10px!important;
-  font-weight:700!important;
-  line-height:16px!important;
+  font-size:9px!important;
+  font-weight:600!important;
+  line-height:14px!important;
 
 }
 
 .qx-level-icon{
   width:14px!important;
-  height:14px!important;
+  height:16px!important;
   display:inline-block!important;
   flex:none!important;
   margin-left:-4px!important;
