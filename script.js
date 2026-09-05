@@ -30,7 +30,7 @@ s.textContent=`
 
 .qx-level-icon{
   width:16px!important;
-  height:16px!important;
+  height:18px!important;
   display:inline-block!important;
   flex:none!important;
   margin-left:-4px!important;
