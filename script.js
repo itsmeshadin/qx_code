@@ -24,7 +24,7 @@ s.textContent=`
   color:#0faf59!important;
   font-size:9px!important;
   font-weight:600!important;
-  line-height:16px!important;
+  line-height:14px!important;
 }
 
 .qx-level-icon{
