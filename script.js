@@ -28,7 +28,7 @@ s.textContent=`
 }
 
 .qx-level-icon{
-  width:16px!important;
+  width:12px!important;
   height:16px!important;
   display:inline-block!important;
   flex:none!important;
