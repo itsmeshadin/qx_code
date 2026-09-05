@@ -22,18 +22,18 @@ s.textContent=`
 
 .qx-live-box span{
   color:#0faf59!important;
-  font-size:10px!important;
+  font-size:14px!important;
   font-weight:700!important;
-  line-height:14px!important;
+  line-height:16px!important;
 
 }
 
 .qx-level-icon{
-  width:10px!important;
-  height:10px!important;
+  width:18px!important;
+  height:18px!important;
   display:inline-block!important;
   flex:none!important;
-  margin-left:-5px!important;
+  margin-left:-8px!important;
   margin-right:5px!important;
   vertical-align:middle!important;
 
