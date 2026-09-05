@@ -15,16 +15,16 @@ s.textContent=`
   color:#0faf59!important;
   font-size:12px!important;
   font-weight:700!important;
-  line-height:16px!important;
+  line-height:14px!important;
   font-family:inherit!important;
   white-space:nowrap!important;
 }
 
 .qx-live-box span{
   color:#0faf59!important;
-  font-size:9px!important;
-  font-weight:600!important;
-  line-height:14px!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  line-height:16px!important;
 }
 
 .qx-level-icon{
