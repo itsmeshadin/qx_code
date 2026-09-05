@@ -28,12 +28,13 @@ s.textContent=`
 }
 
 .qx-level-icon{
-  width:12px!important;
-  height:16px!important;
-  display:inline-block!important;
-  flex:none!important;
-  margin-right: 4px!important;
-}
+  width: 14px!important;
+  height: 14px!important;
+  display: inline-block!important;
+  flex: none!important;
+  margin-right: 6px!important;
+  vertical-align: middle!important;
+  
 }
 
 svg:not(.qx-level-icon):has(>use[href*="#icon-profile-level-standart"]),
