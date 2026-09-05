@@ -22,7 +22,7 @@ s.textContent=`
 
 .qx-live-box span{
   color:#0faf59!important;
-  font-size:10px!important;
+  font-size:12px!important;
   font-weight:700!important;
   line-height:16px!important;
   
@@ -34,9 +34,9 @@ s.textContent=`
   display:inline-block!important;
   flex:none!important;
   margin-left:0px!important;
-  margin-right:8px!important;
+  margin-right:2px!important;
   vertical-align:middle!important;
-  transform: scale(1.3)!important;
+  transform: scale(1.8)!important;
 
 }
 
