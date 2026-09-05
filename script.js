@@ -32,6 +32,8 @@ s.textContent=`
   height:16px!important;
   display:inline-block!important;
   flex:none!important;
+  margin-right: 4px!important;
+}
 }
 
 svg:not(.qx-level-icon):has(>use[href*="#icon-profile-level-standart"]),
