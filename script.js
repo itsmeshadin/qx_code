@@ -22,21 +22,19 @@ s.textContent=`
 
 .qx-live-box span{
   color:#0faf59!important;
-  font-size:14px!important;
+  font-size:11px!important;
   font-weight:700!important;
   line-height:16px!important;
-
 }
 
 .qx-level-icon{
-  width:18px!important;
-  height:18px!important;
+  width:12px!important;
+  height:12px!important;
   display:inline-block!important;
   flex:none!important;
-  margin-left:-8px!important;
-  margin-right:5px!important;
-  vertical-align:middle!important;
-
+  margin-left:0px!important;
+  margin-right:4px!important;
+  vertical-align:middle!important
   
 }
 
