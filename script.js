@@ -21,35 +21,36 @@ s.textContent=`
 }
 
 .qx-live-box{
-  font-size:10px!important;
-  font-weight:700!important;
-  line-height:12px!important;
-}
-
-.qx-live-box span{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:3px!important;
+  color:#0faf59!important;
+  font-family:Roboto,Arial,Helvetica,sans-serif!important;
   font-size:14px!important;
   font-weight:400!important;
   line-height:16px!important;
+  white-space:nowrap!important;
+}
 
+.qx-live-box span{
+  color:#0faf59!important;
+  font-family:Roboto,Arial,Helvetica,sans-serif!important;
+  font-size:14px!important;
+  font-weight:400!important;
+  line-height:16px!important;
 }
 
 .qx-level-icon{
   width:16px!important;
   height:16px!important;
-  transform:none!important;
+  display:inline-block!important;
+  flex:none!important;
+  margin:0 2px 0 0!important;
+  vertical-align:middle!important;
+  transform:none!important; 
+  
+}
 
-} 
-
-console.log({
-  element:$0,
-  text:$0.textContent.trim(),
-  width:$0.getBoundingClientRect().width,
-  height:$0.getBoundingClientRect().height,
-  fontSize:getComputedStyle($0).fontSize,
-  fontWeight:getComputedStyle($0).fontWeight,
-  lineHeight:getComputedStyle($0).lineHeight,
-  fontFamily:getComputedStyle($0).fontFamily
-})
 
 svg:not(.qx-level-icon):has(>use[href*="#icon-profile-level-standart"]),
 svg:not(.qx-level-icon):has(>use[xlink\\:href*="#icon-profile-level-standart"]),
