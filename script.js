@@ -38,7 +38,18 @@ s.textContent=`
   height:16px!important;
   transform:none!important;
 
-}
+} 
+
+console.log({
+  element:$0,
+  text:$0.textContent.trim(),
+  width:$0.getBoundingClientRect().width,
+  height:$0.getBoundingClientRect().height,
+  fontSize:getComputedStyle($0).fontSize,
+  fontWeight:getComputedStyle($0).fontWeight,
+  lineHeight:getComputedStyle($0).lineHeight,
+  fontFamily:getComputedStyle($0).fontFamily
+})
 
 svg:not(.qx-level-icon):has(>use[href*="#icon-profile-level-standart"]),
 svg:not(.qx-level-icon):has(>use[xlink\\:href*="#icon-profile-level-standart"]),
