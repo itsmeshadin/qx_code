@@ -12,24 +12,24 @@ s.textContent=`
   display: inline-flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 3px !important;
+  gap: 0 !important;
   padding-left: 0 !important;
   margin-left: 0 !important;
   color: #0faf59 !important;
 }
 
-/* আইকনকে বক্সের একবারে শুরুতে ফিক্স করা হলো */
+/* আইকনের ডানপাশে মার্জিন বাড়িয়ে ফাঁকা জায়গা করা হয়েছে */
 .qx-level-icon {
-  width: 15px !important;
-  height: 15px !important;
-  min-width: 15px !important;
-  max-width: 15px !important;
-  min-height: 15px !important;
-  max-height: 15px !important;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  max-width: 16px !important;
+  min-height: 16px !important;
+  max-height: 16px !important;
   display: inline-block !important;
-  flex: 0 0 15px !important;
-  margin-left: -6px !important; /* নেগেটিভ মার্জিন দিয়ে ফাঁকা জায়গা টেনে একদম বামে আনা হলো */
-  margin-right: 2px !important;
+  flex: 0 0 16px !important;
+  margin-left: -10px !important;
+  margin-right: 8px !important; /* ডানের ফাঁকা জায়গা বাড়ানো হলো */
   padding: 0 !important;
   vertical-align: middle !important;
 }
@@ -132,20 +132,20 @@ function fix(){
       use.setAttribute('xlink:href', href); 
     } 
   } 
- 
+
   const textNode = [...live.childNodes].find(n => n.nodeType === Node.TEXT_NODE || n.tagName === 'SPAN'); 
   if(textNode && textNode.textContent.trim() !== 'LIVE'){ 
     textNode.textContent = 'LIVE'; 
   } 
 } 
- 
+
 fix(); 
- 
+
 window.qxLiveObserver = new MutationObserver(() => fix()); 
 window.qxLiveObserver.observe(document.body, { 
   childList: true, 
   subtree: true, 
   characterData: true 
 }); 
- 
+
 })();
