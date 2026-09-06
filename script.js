@@ -8,228 +8,143 @@ const s=document.createElement('style');
 s.id='qx-live-style';
 
 s.textContent=`
-.qx-live-box{
-  display:inline-flex!important;
-  align-items:center!important;
-  gap:3px!important;
-  color:#0faf59!important;
-  font-size:12px!important;
-  font-weight:700!important;
-  line-height:14px!important;
-  font-family:inherit!important;
-  white-space:nowrap!important;
+.v2KPX {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 4px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: #0faf59 !important;
 }
 
-.qx-live-box{
-  display:inline-flex!important;
-  align-items:center!important;
-  gap:3px!important;
-  color:#0faf59!important;
-  font-family:Roboto,Arial,Helvetica,sans-serif!important;
-  font-size:14px!important;
-  font-weight:400!important;
-  line-height:16px!important;
-  white-space:nowrap!important;
+.qx-level-icon {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  max-width: 14px !important;
+  min-height: 14px !important;
+  max-height: 14px !important;
+  display: inline-block !important;
+  flex: 0 0 14px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
 }
 
-.qx-live-box span{
-  color:#0faf59!important;
-  font-family:Roboto,Arial,Helvetica,sans-serif!important;
-  font-size:14px!important;
-  font-weight:400!important;
-  line-height:16px!important;
+.qx-level-icon use {
+  width: 100% !important;
+  height: 100% !important;
 }
 
-.qx-level-icon{
-  width:16px!important;
-  height:16px!important;
-  display:inline-block!important;
-  flex:none!important;
-  margin:0 2px 0 0!important;
-  vertical-align:middle!important;
-  transform:none!important; 
-  
+/* আপনার আবিষ্কৃত আসল ক্লাস দিয়ে আইকন হাইড */
+svg.icon-academic,
+.v2KPX svg:not(.qx-level-icon) {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
-
-svg:not(.qx-level-icon):has(>use[href*="#icon-profile-level-standart"]),
-svg:not(.qx-level-icon):has(>use[xlink\\:href*="#icon-profile-level-standart"]),
-svg:not(.qx-level-icon):has(>use[href*="#icon-profile-level-pro"]),
-svg:not(.qx-level-icon):has(>use[xlink\\:href*="#icon-profile-level-pro"]),
-svg:not(.qx-level-icon):has(>use[href*="#icon-profile-level-vip"]),
-svg:not(.qx-level-icon):has(>use[xlink\\:href*="#icon-profile-level-vip"]),
+svg:not(.qx-level-icon):has(>use[href*="#icon-profile-level"]),
+svg:not(.qx-level-icon):has(>use[xlink\\:href*="#icon-profile-level"]),
 svg:not(.qx-level-icon):has(>use[href*="#icon-academic"]),
-svg:not(.qx-level-icon):has(>use[xlink\\:href*="#icon-academic"]){
-  display:none!important;
+svg:not(.qx-level-icon):has(>use[xlink\\:href*="#icon-academic"]) {
+  display: none !important;
+}
+
+/* ব্যাকগ্রাউন্ড ওয়াটারমার্ক রিমুভ */
+.usFyP, 
+[class*="demo"],
+[class*="Demo"],
+[class*="watermark"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 `;
 
 document.head.appendChild(s);
 
-
-/* BALANCE */
-
 function getBalance(){
-
-  const all=[
-    ...document.querySelectorAll(
-      '.zt1hG,header div,header span'
-    )
-  ];
-
+  const all=[...document.querySelectorAll('.zt1hG,header div,header span')];
   for(const el of all){
-
     const text=el.textContent.trim();
-
     if(!text.includes('$')) continue;
-
-    const clean=text
-      .replace(/,/g,'')
-      .replace('$','')
-      .trim();
-
+    const clean=text.replace(/,/g,'').replace('$','').trim();
     const n=parseFloat(clean);
-
-    if(Number.isFinite(n) && n>=0 && n<100000000){
-      return n;
-    }
+    if(Number.isFinite(n) && n>=0 && n<100000000) return n;
   }
-
   return null;
 }
 
-
-/* LEVEL */
-
 function getLevel(balance){
-
-  if(balance>=10000){
-    return 'icon-profile-level-vip';
-  }
-
-  if(balance>=5000){
-    return 'icon-profile-level-pro';
-  }
-
+  if(balance>=10000) return 'icon-profile-level-vip';
+  if(balance>=5000) return 'icon-profile-level-pro';
   return 'icon-profile-level-standart';
 }
 
+function removeDemoWatermark(){
+  document.querySelectorAll('.usFyP, [class*="usFyP"]').forEach(el => {
+    el.remove();
+  });
 
-/* HIDE ORIGINAL ICONS */
-
-function hideIcons(){
-
-  document.querySelectorAll('svg').forEach(svg=>{
-
-    if(svg.classList.contains('qx-level-icon'))
-      return;
-
-    const use=svg.querySelector('use');
-
-    if(!use)return;
-
-    const href=
-      use.getAttribute('href') ||
-      use.getAttribute('xlink:href') ||
-      '';
-
-    if(
-      href.includes('#icon-profile-level-standart') ||
-      href.includes('#icon-profile-level-pro') ||
-      href.includes('#icon-profile-level-vip') ||
-      href.includes('#icon-academic')
-    ){
-      svg.style.setProperty(
-        'display',
-        'none',
-        'important'
-      );
+  document.querySelectorAll('div, span').forEach(el => {
+    if (el.classList.contains('v2KPX') || el.closest('.v2KPX')) return;
+    if (el.children.length === 0 && el.textContent.trim().toUpperCase() === 'DEMO') {
+      el.remove();
     }
   });
 }
 
-
-/* LIVE */
-
 function fix(){
+  removeDemoWatermark();
 
-  hideIcons();
+  const live = [...document.querySelectorAll('.v2KPX')].find(e => {
+    const t = e.textContent.trim().toUpperCase();
+    return t.includes('DEMO') || t.includes('LIVE');
+  });
 
-  const live=[...document.querySelectorAll('.v2KPX')]
-    .find(e=>{
-      const t=e.textContent.trim().toUpperCase();
-      return t==='DEMO' || t==='LIVE';
-    });
+  if(!live) return;
 
-  if(!live)return;
+  // অরিজিনাল icon-academic ও বাড়তি SVG মুছে দেওয়া
+  live.querySelectorAll('svg.icon-academic, svg:not(.qx-level-icon)').forEach(el => {
+    el.remove();
+  });
 
-  const parent=live.parentElement;
+  const balance = getBalance();
+  if(balance === null) return;
+  const level = getLevel(balance);
+  const href = '/profile/images/spritemap.svg#' + level;
 
-  if(!parent)return;
-
-  live.style.setProperty(
-    'display',
-    'none',
-    'important'
-  );
-
-  let box=parent.querySelector('.qx-live-box');
-
-  if(!box){
-
-    box=document.createElement('span');
-    box.className='qx-live-box';
-
-    box.innerHTML=`
-      <svg class="qx-level-icon" viewBox="0 0 24 24">
-        <use></use>
-      </svg>
-      <span>LIVE</span>
-    `;
-
-    parent.insertBefore(box,live);
+  let icon = live.querySelector('.qx-level-icon');
+  if(!icon){
+    icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    icon.setAttribute('class', 'qx-level-icon');
+    icon.setAttribute('viewBox', '0 0 24 24');
+    icon.innerHTML = `<use href="${href}" xlink:href="${href}"></use>`;
+    live.insertBefore(icon, live.firstChild);
+  } else {
+    const use = icon.querySelector('use');
+    if(use && use.getAttribute('href') !== href){
+      use.setAttribute('href', href);
+      use.setAttribute('xlink:href', href);
+    }
   }
 
-  const balance=getBalance();
-
-  if(balance===null)return;
-
-  const level=getLevel(balance);
-
-  const use=box.querySelector('.qx-level-icon use');
-
-  if(!use)return;
-
-  const href=
-    '/profile/images/spritemap.svg#'+level;
-
-  if(use.getAttribute('href')!==href){
-
-    use.setAttribute('href',href);
-    use.setAttribute('xlink:href',href);
+  const textNode = [...live.childNodes].find(n => n.nodeType === Node.TEXT_NODE || n.tagName === 'SPAN');
+  if(textNode && textNode.textContent.trim() !== 'LIVE'){
+    textNode.textContent = 'LIVE';
   }
-
-  box.querySelector('.qx-level-icon')
-    .style.setProperty(
-      'display',
-      'inline-block',
-      'important'
-    );
 }
-
-
-/* START */
 
 fix();
 
-window.qxLiveObserver=new MutationObserver(()=>{
-  fix();
-});
-
-window.qxLiveObserver.observe(document.body,{
-  childList:true,
-  subtree:true,
-  characterData:true
+window.qxLiveObserver = new MutationObserver(() => fix());
+window.qxLiveObserver.observe(document.body, {
+  childList: true,
+  subtree: true,
+  characterData: true
 });
 
 })();
