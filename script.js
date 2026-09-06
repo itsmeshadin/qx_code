@@ -20,12 +20,17 @@ s.textContent=`
   white-space:nowrap!important;
 }
 
-.qx-live-box span{
-  color:#0faf59!important;
-  font-size:12px!important;
+.qx-live-box{
+  font-size:10px!important;
   font-weight:700!important;
-  line-height:16px!important;
-  
+  line-height:12px!important;
+}
+
+.qx-live-box span{
+  font-size:10px!important;
+  font-weight:700!important;
+  line-height:12px!important;
+}
 }
 
 .qx-level-icon{
