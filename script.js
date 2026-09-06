@@ -12,22 +12,24 @@ s.textContent=`
   display: inline-flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 4px !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  gap: 3px !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
   color: #0faf59 !important;
 }
 
+/* আইকনকে বক্সের একবারে শুরুতে ফিক্স করা হলো */
 .qx-level-icon {
-  width: 14px !important;
-  height: 14px !important;
-  min-width: 14px !important;
-  max-width: 14px !important;
-  min-height: 14px !important;
-  max-height: 14px !important;
+  width: 15px !important;
+  height: 15px !important;
+  min-width: 15px !important;
+  max-width: 15px !important;
+  min-height: 15px !important;
+  max-height: 15px !important;
   display: inline-block !important;
-  flex: 0 0 14px !important;
-  margin: 0 !important;
+  flex: 0 0 15px !important;
+  margin-left: -6px !important; /* নেগেটিভ মার্জিন দিয়ে ফাঁকা জায়গা টেনে একদম বামে আনা হলো */
+  margin-right: 2px !important;
   padding: 0 !important;
   vertical-align: middle !important;
 }
@@ -37,7 +39,7 @@ s.textContent=`
   height: 100% !important;
 }
 
-/* আপনার আবিষ্কৃত আসল ক্লাস দিয়ে আইকন হাইড */
+/* আসল ক্লাস দিয়ে বাড়তি আইকন হাইড */
 svg.icon-academic,
 .v2KPX svg:not(.qx-level-icon) {
   display: none !important;
@@ -107,7 +109,6 @@ function fix(){
 
   if(!live) return;
 
-  // অরিজিনাল icon-academic ও বাড়তি SVG মুছে দেওয়া
   live.querySelectorAll('svg.icon-academic, svg:not(.qx-level-icon)').forEach(el => {
     el.remove();
   });
@@ -119,32 +120,32 @@ function fix(){
 
   let icon = live.querySelector('.qx-level-icon');
   if(!icon){
-    icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    icon.setAttribute('class', 'qx-level-icon');
-    icon.setAttribute('viewBox', '0 0 24 24');
-    icon.innerHTML = `<use href="${href}" xlink:href="${href}"></use>`;
-    live.insertBefore(icon, live.firstChild);
-  } else {
-    const use = icon.querySelector('use');
-    if(use && use.getAttribute('href') !== href){
-      use.setAttribute('href', href);
-      use.setAttribute('xlink:href', href);
-    }
-  }
-
-  const textNode = [...live.childNodes].find(n => n.nodeType === Node.TEXT_NODE || n.tagName === 'SPAN');
-  if(textNode && textNode.textContent.trim() !== 'LIVE'){
-    textNode.textContent = 'LIVE';
-  }
-}
-
-fix();
-
-window.qxLiveObserver = new MutationObserver(() => fix());
-window.qxLiveObserver.observe(document.body, {
-  childList: true,
-  subtree: true,
-  characterData: true
-});
-
+    icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); 
+    icon.setAttribute('class', 'qx-level-icon'); 
+    icon.setAttribute('viewBox', '0 0 24 24'); 
+    icon.innerHTML = `<use href="${href}" xlink:href="${href}"></use>`; 
+    live.insertBefore(icon, live.firstChild); 
+  } else { 
+    const use = icon.querySelector('use'); 
+    if(use && use.getAttribute('href') !== href){ 
+      use.setAttribute('href', href); 
+      use.setAttribute('xlink:href', href); 
+    } 
+  } 
+ 
+  const textNode = [...live.childNodes].find(n => n.nodeType === Node.TEXT_NODE || n.tagName === 'SPAN'); 
+  if(textNode && textNode.textContent.trim() !== 'LIVE'){ 
+    textNode.textContent = 'LIVE'; 
+  } 
+} 
+ 
+fix(); 
+ 
+window.qxLiveObserver = new MutationObserver(() => fix()); 
+window.qxLiveObserver.observe(document.body, { 
+  childList: true, 
+  subtree: true, 
+  characterData: true 
+}); 
+ 
 })();
