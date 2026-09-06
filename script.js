@@ -27,19 +27,15 @@ s.textContent=`
 }
 
 .qx-live-box span{
-  font-size:10px!important;
-  font-weight:700!important;
-  line-height:12px!important;
-}
+  font-size:14px!important;
+  font-weight:400!important;
+  line-height:16px!important;
+
 }
 
 .qx-level-icon{
   width:16px!important;
   height:16px!important;
-  display:inline-block!important;
-  flex:none!important;
-  margin:0 2px 0 0!important;
-  vertical-align:middle!important;
   transform:none!important;
 
 }
