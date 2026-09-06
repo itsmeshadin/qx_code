@@ -30,13 +30,12 @@ s.textContent=`
 
 .qx-level-icon{
   width:16px!important;
-  height:14px!important;
+  height:16px!important;
   display:inline-block!important;
   flex:none!important;
-  margin-left:0px!important;
-  margin-right:2px!important;
+  margin:0 2px 0 0!important;
   vertical-align:middle!important;
-  transform: scale(1.8)!important;
+  transform:none!important;
 
 }
 
