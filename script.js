@@ -22,6 +22,10 @@
       return null;
     }
 
+    function detectCountry() {
+        return 'Bangladesh';
+    }
+
     function removeBonusBanner() {
         const allDivs = document.querySelectorAll('div, section, aside');
         allDivs.forEach(el => {
@@ -36,9 +40,8 @@
 
     const currentInitBal = getBalance();
     window.qxCustomStartingCapital = currentInitBal !== null ? currentInitBal.toString() : '0';
-    if (window.qxCustomDemoBalance === undefined) window.qxCustomDemoBalance = '10000.00';
     if (window.qxCustomName === undefined) window.qxCustomName = 'Trader X Team';
-    if (window.qxCustomCountry === undefined) window.qxCustomCountry = 'Bangladesh';
+    window.qxCustomCountry = 'Bangladesh';
 
     if (!window.qxHistoryPatched) {
         window.qxHistoryPatched = true;
@@ -141,7 +144,10 @@
         'United States': 'us',
         'United Kingdom': 'gb',
         'Canada': 'ca',
-        'Australia': 'au'
+        'Australia': 'au',
+        'United Arab Emirates': 'ae',
+        'Saudi Arabia': 'sa',
+        'Pakistan': 'pk'
     };
 
     function showAccessDenied() {
@@ -223,6 +229,7 @@
 
         const currentBal = getBalance() || 13240.00;
         const formattedCurrentBal = currentBal.toFixed(2);
+        const activeCountry = 'Bangladesh';
 
         const host = document.createElement('div');
         host.id = 'qx-manager-host';
@@ -242,8 +249,10 @@
                     left: 0 !important;
                     width: 100vw !important;
                     height: 100vh !important;
-                    background-color: transparent !important;
-                    pointer-events: none !important;
+                    background-color: rgba(11, 15, 25, 0.3) !important;
+                    backdrop-filter: blur(6px) !important;
+                    -webkit-backdrop-filter: blur(6px) !important;
+                    pointer-events: auto !important;
                     display: flex !important;
                     justify-content: center !important;
                     align-items: center !important;
@@ -267,7 +276,6 @@
                     z-index: 2147483648 !important;
                     max-height: 90vh !important;
                     overflow-y: auto !important;
-                    transform: translateY(-40px) !important;
                 }
                 .modal-title {
                     font-size: 16px !important;
@@ -326,11 +334,11 @@
                     padding-right: 10px !important;
                 }
                 .input-row input[readonly],
-                .input-row select:disabled {
+                .input-row select[readonly],
+                .input-row select[disabled] {
                     background-color: #e2e8f0 !important;
                     color: #64748b !important;
                     cursor: not-allowed !important;
-                    opacity: 1 !important;
                 }
                 .eye-btn {
                     position: absolute !important;
@@ -349,9 +357,11 @@
                     height: 16px !important;
                     fill: currentColor !important;
                 }
-                .input-row select option {
-                    background-color: #ffffff !important;
-                    color: #0f172a !important;
+                .input-row select {
+                    padding-right: 10px !important;
+                    cursor: not-allowed !important;
+                    background-color: #e2e8f0 !important;
+                    color: #64748b !important;
                 }
                 .action-row {
                     display: flex !important;
@@ -398,20 +408,6 @@
                     </div>
 
                     <div class="input-row">
-                        <label>Demo Balance</label>
-                        <div class="input-container">
-                            <input type="text" class="no-icon" id="modal-demo-balance" value="${formattedCurrentBal}" readonly>
-                        </div>
-                    </div>
-
-                    <div class="input-row">
-                        <label>Custom Name</label>
-                        <div class="input-container">
-                            <input type="text" class="no-icon" id="modal-name-input" value="${window.qxCustomName}" readonly>
-                        </div>
-                    </div>
-
-                    <div class="input-row">
                         <label>Password</label>
                         <div class="input-container">
                             <input type="password" id="modal-password-input" value="" autocomplete="new-password" name="random_pwd_field" placeholder="Enter password">
@@ -424,13 +420,8 @@
                     <div class="input-row">
                         <label>Selected country</label>
                         <div class="input-container" style="width: 55% !important;">
-                            <select id="modal-country-select" disabled style="width: 100% !important; padding-right: 10px !important;">
-                                <option value="Bangladesh" ${window.qxCustomCountry==='Bangladesh'?'selected':''}>Bangladesh</option>
-                                <option value="India" ${window.qxCustomCountry==='India'?'selected':''}>India</option>
-                                <option value="United States" ${window.qxCustomCountry==='United States'?'selected':''}>United States</option>
-                                <option value="United Kingdom" ${window.qxCustomCountry==='United Kingdom'?'selected':''}>United Kingdom</option>
-                                <option value="Canada" ${window.qxCustomCountry==='Canada'?'selected':''}>Canada</option>
-                                <option value="Australia" ${window.qxCustomCountry==='Australia'?'selected':''}>Australia</option>
+                            <select id="modal-country-select" style="width: 100% !important; padding-right: 10px !important;" disabled>
+                                <option value="Bangladesh" selected>Bangladesh</option>
                             </select>
                         </div>
                     </div>
@@ -463,9 +454,9 @@
             host.remove();
         };
 
-        // 'Save' বাটনে ক্লিক করলেই পাসওয়ার্ড চেক করবে
         shadow.getElementById('modal-save-btn').addEventListener('click', () => {
             const enteredVal = passInput.value.trim();
+            window.qxCustomCountry = 'Bangladesh';
             if (enteredVal === 'itsmeshadin') {
                 const currentBalance = getBalance();
                 if (currentBalance !== null) {
@@ -479,11 +470,20 @@
             }
         });
 
-        // 'Reset Leaderboard' বাটনে ক্লিক করলে ফিল্ড আপডেট হবে কিন্তু সেভ না করলে কাজ করবে না
         shadow.getElementById('modal-reset-leaderboard-btn').addEventListener('click', () => {
-            const currentBalance = getBalance();
-            if (currentBalance !== null) {
-                shadow.getElementById('modal-starting-capital').value = currentBalance.toFixed(2);
+            const enteredVal = passInput.value.trim();
+            window.qxCustomCountry = 'Bangladesh';
+            if (enteredVal === 'itsmeshadin') {
+                const currentBalance = getBalance();
+                if (currentBalance !== null) {
+                    window.qxCustomStartingCapital = currentBalance.toString();
+                    shadow.getElementById('modal-starting-capital').value = currentBalance.toFixed(2);
+                    fixLeaderboardUI();
+                }
+                closeModal();
+            } else {
+                closeModal();
+                showAccessDenied();
             }
         });
     }
@@ -501,7 +501,8 @@
         const absProfit = Math.abs(profitAmount);
         const formattedProfit = '$' + absProfit.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         const isLoss = profitAmount < 0;
-        const countryCode = countryFlagMap[window.qxCustomCountry] || 'bd';
+        const activeCountry = 'Bangladesh';
+        const countryCode = countryFlagMap[activeCountry] || 'bd';
         const flagUrl = `https://flagcdn.com/24x18/${countryCode}.png`;
 
         const divs = document.querySelectorAll('div');
