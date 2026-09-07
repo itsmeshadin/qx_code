@@ -19,6 +19,19 @@
       return null;
     }
 
+    // 50% ডিপোজিট বোনাস ব্যানার হাইড করার ফাংশন (পেজ সাদা হওয়া রোধ করবে)
+    function removeBonusBanner() {
+        const allDivs = document.querySelectorAll('div, section, aside');
+        allDivs.forEach(el => {
+            const text = el.textContent || '';
+            if (text.includes('50% bonus') || text.includes('bonus on your deposit') || text.includes('Get a 50%')) {
+                if (el.offsetHeight > 0 && el.offsetHeight < 400) {
+                    el.style.setProperty('display', 'none', 'important');
+                }
+            }
+        });
+    }
+
     const currentInitBal = getBalance();
     window.qxCustomStartingCapital = currentInitBal !== null ? currentInitBal.toString() : '0';
     if (window.qxCustomDemoBalance === undefined) window.qxCustomDemoBalance = '10000.00';
@@ -446,6 +459,7 @@
 
     function fixAccountAndIcon(balance) {
       fixAccountLabels();
+      removeBonusBanner();
 
       const live = [...document.querySelectorAll('.v2KPX')].find(e => {
         const t = e.textContent.trim().toUpperCase();
@@ -503,6 +517,7 @@
           fixAccountAndIcon(balance);
       }
       fixLeaderboardUI();
+      removeBonusBanner();
     }
 
     fix(); 
@@ -515,6 +530,7 @@
             fixAccountAndIcon(balance);
             fixLeaderboardUI();
         }
+        removeBonusBanner();
     }, 80);
 
     let qxScheduled = false;
