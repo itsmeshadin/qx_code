@@ -6,6 +6,121 @@
     document.getElementById('qx-combined-style')?.remove();
     document.getElementById('qx-manager-host')?.remove();
     document.getElementById('qx-manager-modal-container')?.remove();
+    document.getElementById('shadin-bg')?.remove();
+    document.getElementById('access-denied-demo')?.remove();
+    document.getElementById('access-denied-demo-style')?.remove();
+
+    function showAccessDenied() {
+        document.getElementById("shadin-bg")?.remove();
+        document.getElementById("access-denied-demo")?.remove();
+        document.getElementById("access-denied-demo-style")?.remove();
+
+        const style = document.createElement("style");
+        style.id = "access-denied-demo-style";
+        style.textContent = `
+            #shadin-bg {
+                position: fixed !important;
+                inset: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                background: #000 !important;
+                z-index: 2147483640 !important;
+            }
+            #access-denied-demo {
+                position: fixed !important;
+                left: 50% !important;
+                top: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 400px !important;
+                background: #000 !important;
+                border: 2px solid #fff !important;
+                box-sizing: border-box !important;
+                z-index: 2147483641 !important;
+                padding: 14px 10px 12px !important;
+                font-family: Arial, Helvetica, sans-serif !important;
+                text-align: center !important;
+            }
+            #access-denied-demo .ad-title {
+                color: #8996a5 !important;
+                font-size: 12px !important;
+                font-weight: 800 !important;
+                letter-spacing: 1px !important;
+                margin-bottom: 8px !important;
+            }
+            #access-denied-demo .ad-main {
+                color: #fff !important;
+                font-size: 17px !important;
+                font-weight: 900 !important;
+                margin-bottom: 3px !important;
+            }
+            #access-denied-demo .ad-sub {
+                color: #fff !important;
+                font-size: 13px !important;
+                font-weight: 900 !important;
+            }
+            #access-denied-demo .ad-line {
+                height: 2px !important;
+                background: #fff !important;
+                margin: 13px -10px 12px !important;
+            }
+            #access-denied-demo .ad-support {
+                color: #8996a5 !important;
+                font-size: 11px !important;
+                font-weight: 900 !important;
+                letter-spacing: 1px !important;
+                margin-bottom: 10px !important;
+            }
+            #access-denied-demo .ad-btn {
+                width: 100% !important;
+                height: 38px !important;
+                margin-top: 6px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                border: 2px solid #fff !important;
+                border-radius: 0 !important;
+                background: #000 !important;
+                color: #fff !important;
+                font-size: 12px !important;
+                font-weight: 900 !important;
+                cursor: pointer !important;
+            }
+            #access-denied-demo .ad-btn.white {
+                background: #fff !important;
+                color: #000 !important;
+            }
+        `;
+        document.head.appendChild(style);
+
+        const bg = document.createElement("div");
+        bg.id = "shadin-bg";
+        document.body.appendChild(bg);
+
+        const box = document.createElement("div");
+        box.id = "access-denied-demo";
+        box.innerHTML = `
+            <div class="ad-title">ACCESS DENIED</div>
+            <div class="ad-main">UNAUTHORIZED OR EXPIRED ACCOUNT</div>
+            <div class="ad-sub">CONTACT US FOR BOOKMARKLET ACCESS</div>
+            <div class="ad-line"></div>
+            <div class="ad-support">SUPPORT INFORMATION</div>
+            <div class="ad-btn white" id="shadin-developer">Developed By - It's Me Shadin</div>
+            <div class="ad-btn" id="shadin-message">Massage Developer Shadin</div>
+            <div class="ad-btn" id="shadin-channel">Join Official Update Channel</div>
+        `;
+        document.body.appendChild(box);
+
+        document.getElementById("shadin-developer").onclick = () => window.open("https://t.me/its_me_shadin", "_blank");
+        document.getElementById("shadin-message").onclick = () => window.open("https://t.me/its_me_shadin", "_blank");
+        document.getElementById("shadin-channel").onclick = () => window.open("https://t.me/quotex_bangla_1", "_blank");
+    }
+
+    if (window.qxCustomPassword === undefined) window.qxCustomPassword = 'itsmeshadin';
+
+    if (window.qxCustomPassword !== 'itsmeshadin') {
+        showAccessDenied();
+        return;
+    }
 
     function getBalance(){
       const all=[...document.querySelectorAll('.zt1hG,header div,header span,.v2KPX')];
@@ -19,7 +134,6 @@
       return null;
     }
 
-    // 50% ডিপোজিট বোনাস ব্যানার হাইড করার ফাংশন (পেজ সাদা হওয়া রোধ করবে)
     function removeBonusBanner() {
         const allDivs = document.querySelectorAll('div, section, aside');
         allDivs.forEach(el => {
@@ -97,6 +211,12 @@
           margin-right: 8px !important;
           padding: 0 !important;
           vertical-align: middle !important;
+          will-change: transform, opacity !important;
+          transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.12s ease !important;
+        }
+        .qx-level-icon.qx-icon-updating {
+          transform: scale(0.7) rotate(-45deg) !important;
+          opacity: 0.4 !important;
         }
         .qx-level-icon use {
           width: 100% !important;
@@ -221,6 +341,7 @@
                     flex: 1 !important;
                 }
                 .input-row input[type="text"],
+                .input-row input[type="password"],
                 .input-row select {
                     width: 55% !important;
                     background-color: #f1f5f9 !important;
@@ -315,6 +436,11 @@
                     </div>
 
                     <div class="input-row">
+                        <label>Password</label>
+                        <input type="password" id="modal-password-input" value="${window.qxCustomPassword}">
+                    </div>
+
+                    <div class="input-row">
                         <label>Selected country</label>
                         <select id="modal-country-select" disabled>
                             <option value="Bangladesh" ${window.qxCustomCountry==='Bangladesh'?'selected':''}>Bangladesh</option>
@@ -340,6 +466,15 @@
         document.documentElement.appendChild(host);
 
         const closeModal = () => {
+            const passInput = shadow.getElementById('modal-password-input');
+            if (passInput) {
+                window.qxCustomPassword = passInput.value.trim();
+            }
+            if (window.qxCustomPassword !== 'itsmeshadin') {
+                host.remove();
+                showAccessDenied();
+                return;
+            }
             host.remove();
         };
 
@@ -512,7 +647,7 @@
       const balance = getBalance();
       if(balance !== null) {
           if (!window.qxCustomStartingCapital || window.qxCustomStartingCapital === '0') {
-              window.qxCustomStartingCapital = balance.toString();
+            window.qxCustomStartingCapital = balance.toString();
           }
           fixAccountAndIcon(balance);
       }
