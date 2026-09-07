@@ -4,8 +4,8 @@
     clearInterval(window.qxUrlForceInterval);
     clearInterval(window.qxBalanceInterval);
     document.getElementById('qx-combined-style')?.remove();
+    document.getElementById('qx-manager-host')?.remove();
     document.getElementById('qx-manager-modal-container')?.remove();
-    document.getElementById('qx-floating-trigger-btn')?.remove();
 
     function getBalance(){
       const all=[...document.querySelectorAll('.zt1hG,header div,header span,.v2KPX')];
@@ -62,162 +62,6 @@
     const style = document.createElement('style');
     style.id = 'qx-combined-style';
     style.textContent = `
-        #qx-manager-modal-container {
-            color-scheme: light !important;
-            isolation: isolate !important;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-        }
-        #qx-manager-modal-container * {
-            box-sizing: border-box !important;
-            color-scheme: light !important;
-        }
-        #qx-manager-modal-container .overlay {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            background-color: rgba(0, 0, 0, 0) !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            z-index: 2147483647 !important;
-            transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        }
-        #qx-manager-modal-container.qx-show .overlay {
-            background-color: rgba(0, 0, 0, 0.75) !important;
-        }
-        #qx-manager-modal-container .modal-card {
-            background-color: #ffffff !important;
-            background: #ffffff !important;
-            opacity: 0 !important;
-            transform: scale(0.85) translateY(-35px) !important;
-            width: 92% !important;
-            max-width: 380px !important;
-            border-radius: 24px !important;
-            padding: 24px 20px !important;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
-            display: flex !important;
-            flex-direction: column !important;
-            color: #1e293b !important;
-            position: relative !important;
-            z-index: 2147483647 !important;
-            max-height: 90vh !important;
-            overflow-y: auto !important;
-            will-change: transform, opacity !important;
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        }
-        #qx-manager-modal-container.qx-show .modal-card {
-            opacity: 1 !important;
-            transform: scale(1) translateY(-50px) !important;
-        }
-        #qx-manager-modal-container .modal-title {
-            font-size: 16px !important;
-            font-weight: 800 !important;
-            text-align: center !important;
-            color: #0f172a !important;
-            margin: 0 !important;
-        }
-        #qx-manager-modal-container .modal-title a {
-            color: #2563eb !important;
-            text-decoration: none !important;
-        }
-        #qx-manager-modal-container .modal-title a:hover {
-            text-decoration: underline !important;
-        }
-        #qx-manager-modal-container .modal-subtitle {
-            font-size: 12px !important;
-            font-weight: 600 !important;
-            text-align: center !important;
-            color: #64748b !important;
-            margin: 6px 0 16px 0 !important;
-        }
-        #qx-manager-modal-container .input-row {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            margin-bottom: 10px !important;
-        }
-        #qx-manager-modal-container .input-row > label {
-            font-size: 12px !important;
-            color: #0f172a !important;
-            font-weight: 700 !important;
-            flex: 1 !important;
-        }
-        #qx-manager-modal-container .input-row input[type="text"],
-        #qx-manager-modal-container .input-row select {
-            width: 55% !important;
-            background-color: #f1f5f9 !important;
-            border: 1.5px solid #cbd5e1 !important;
-            border-radius: 10px !important;
-            padding: 8px 10px !important;
-            font-size: 13px !important;
-            font-weight: 700 !important;
-            color: #0f172a !important;
-            text-align: center !important;
-            outline: none !important;
-        }
-        #qx-manager-modal-container .input-row input[readonly],
-        #qx-manager-modal-container .input-row select:disabled {
-            background-color: #e2e8f0 !important;
-            color: #64748b !important;
-            cursor: not-allowed !important;
-            opacity: 1 !important;
-        }
-        #qx-manager-modal-container .input-row select option {
-            background-color: #ffffff !important;
-            color: #0f172a !important;
-        }
-        #qx-manager-modal-container .action-row {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            margin-top: 14px !important;
-            gap: 6px !important;
-        }
-        #qx-manager-modal-container .settings-btn {
-            width: 36px !important;
-            height: 36px !important;
-            border: 1.5px solid #cbd5e1 !important;
-            border-radius: 10px !important;
-            background-color: #f1f5f9 !important;
-            color: #4f46e5 !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            cursor: pointer !important;
-            flex-shrink: 0 !important;
-        }
-        #qx-manager-modal-container .settings-btn svg {
-            width: 18px !important;
-            height: 18px !important;
-            fill: currentColor !important;
-        }
-        #qx-manager-modal-container .reset-btn {
-            border: 1.5px solid #cbd5e1 !important;
-            border-radius: 10px !important;
-            padding: 8px 10px !important;
-            font-size: 11px !important;
-            font-weight: 700 !important;
-            color: #ef4444 !important;
-            background-color: #f1f5f9 !important;
-            cursor: pointer !important;
-            flex: 1.2 !important;
-            text-align: center !important;
-        }
-        #qx-manager-modal-container .save-btn {
-            border-radius: 10px !important;
-            padding: 8px 14px !important;
-            font-size: 12px !important;
-            font-weight: 700 !important;
-            color: #ffffff !important;
-            background-color: #0faf59 !important;
-            border: 1.5px solid #0d964d !important;
-            cursor: pointer !important;
-            flex: 0.9 !important;
-            text-align: center !important;
-        }
-
         .v2KPX {
           display: inline-flex !important;
           align-items: center !important;
@@ -280,14 +124,163 @@
     };
 
     function showModal() {
-        if (document.getElementById('qx-manager-modal-container')) return;
+        if (document.getElementById('qx-manager-host')) return;
 
         const currentBal = getBalance() || 13240.00;
         const formattedCurrentBal = currentBal.toFixed(2);
 
-        const container = document.createElement('div');
-        container.id = 'qx-manager-modal-container';
-        container.innerHTML = `
+        const host = document.createElement('div');
+        host.id = 'qx-manager-host';
+        host.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; width: 0 !important; height: 0 !important; z-index: 2147483647 !important;';
+        
+        const shadow = host.attachShadow({ mode: 'open' });
+        shadow.innerHTML = `
+            <style>
+                * {
+                    box-sizing: border-box !important;
+                    margin: 0;
+                    padding: 0;
+                }
+                .overlay {
+                    position: fixed !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    background-color: transparent !important;
+                    pointer-events: none !important;
+                    display: flex !important;
+                    justify-content: center !important;
+                    align-items: center !important;
+                    z-index: 2147483647 !important;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+                }
+                .modal-card {
+                    pointer-events: auto !important;
+                    background-color: #ffffff !important;
+                    background: #ffffff !important;
+                    opacity: 1 !important;
+                    width: 92% !important;
+                    max-width: 380px !important;
+                    border-radius: 24px !important;
+                    padding: 24px 20px !important;
+                    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4) !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    color: #1e293b !important;
+                    position: relative !important;
+                    z-index: 2147483648 !important;
+                    max-height: 90vh !important;
+                    overflow-y: auto !important;
+                    transform: translateY(-40px) !important;
+                }
+                .modal-title {
+                    font-size: 16px !important;
+                    font-weight: 800 !important;
+                    text-align: center !important;
+                    color: #0f172a !important;
+                    margin: 0 !important;
+                }
+                .modal-title a {
+                    color: #2563eb !important;
+                    text-decoration: none !important;
+                }
+                .modal-title a:hover {
+                    text-decoration: underline !important;
+                }
+                .modal-subtitle {
+                    font-size: 12px !important;
+                    font-weight: 600 !important;
+                    text-align: center !important;
+                    color: #64748b !important;
+                    margin: 6px 0 16px 0 !important;
+                }
+                .input-row {
+                    display: flex !important;
+                    justify-content: space-between !important;
+                    align-items: center !important;
+                    margin-bottom: 10px !important;
+                }
+                .input-row > label {
+                    font-size: 12px !important;
+                    color: #0f172a !important;
+                    font-weight: 700 !important;
+                    flex: 1 !important;
+                }
+                .input-row input[type="text"],
+                .input-row select {
+                    width: 55% !important;
+                    background-color: #f1f5f9 !important;
+                    border: 1.5px solid #cbd5e1 !important;
+                    border-radius: 10px !important;
+                    padding: 8px 10px !important;
+                    font-size: 13px !important;
+                    font-weight: 700 !important;
+                    color: #0f172a !important;
+                    text-align: center !important;
+                    outline: none !important;
+                }
+                .input-row input[readonly],
+                .input-row select:disabled {
+                    background-color: #e2e8f0 !important;
+                    color: #64748b !important;
+                    cursor: not-allowed !important;
+                    opacity: 1 !important;
+                }
+                .input-row select option {
+                    background-color: #ffffff !important;
+                    color: #0f172a !important;
+                }
+                .action-row {
+                    display: flex !important;
+                    justify-content: space-between !important;
+                    align-items: center !important;
+                    margin-top: 14px !important;
+                    gap: 6px !important;
+                }
+                .settings-btn {
+                    width: 36px !important;
+                    height: 36px !important;
+                    border: 1.5px solid #cbd5e1 !important;
+                    border-radius: 10px !important;
+                    background-color: #f1f5f9 !important;
+                    color: #4f46e5 !important;
+                    display: flex !important;
+                    justify-content: center !important;
+                    align-items: center !important;
+                    cursor: pointer !important;
+                    flex-shrink: 0 !important;
+                }
+                .settings-btn svg {
+                    width: 18px !important;
+                    height: 18px !important;
+                    fill: currentColor !important;
+                }
+                .reset-btn {
+                    border: 1.5px solid #cbd5e1 !important;
+                    border-radius: 10px !important;
+                    padding: 8px 10px !important;
+                    font-size: 11px !important;
+                    font-weight: 700 !important;
+                    color: #ef4444 !important;
+                    background-color: #f1f5f9 !important;
+                    cursor: pointer !important;
+                    flex: 1.2 !important;
+                    text-align: center !important;
+                }
+                .save-btn {
+                    border-radius: 10px !important;
+                    padding: 8px 14px !important;
+                    font-size: 12px !important;
+                    font-weight: 700 !important;
+                    color: #ffffff !important;
+                    background-color: #0faf59 !important;
+                    border: 1.5px solid #0d964d !important;
+                    cursor: pointer !important;
+                    flex: 0.9 !important;
+                    text-align: center !important;
+                }
+            </style>
             <div class="overlay">
                 <div class="modal-card">
                     <h1 class="modal-title">DEVELOPER BY - <a href="https://t.me/its_me_shadin" target="_blank">@its_me_shadin</a></h1>
@@ -330,28 +323,21 @@
                 </div>
             </div>
         `;
-        document.body.appendChild(container);
 
-        requestAnimationFrame(() => {
-            container.classList.add('qx-show');
-        });
+        document.documentElement.appendChild(host);
 
         const closeModal = () => {
-            container.classList.remove('qx-show');
-            setTimeout(() => container.remove(), 250);
+            host.remove();
         };
 
-        document.getElementById('modal-close-btn').addEventListener('click', closeModal);
-        document.getElementById('modal-save-btn').addEventListener('click', closeModal);
-        container.querySelector('.overlay').addEventListener('click', (e) => {
-            if (e.target === container.querySelector('.overlay')) closeModal();
-        });
+        shadow.getElementById('modal-close-btn').addEventListener('click', closeModal);
+        shadow.getElementById('modal-save-btn').addEventListener('click', closeModal);
 
-        document.getElementById('modal-reset-leaderboard-btn').addEventListener('click', () => {
+        shadow.getElementById('modal-reset-leaderboard-btn').addEventListener('click', () => {
             const currentBalance = getBalance();
             if (currentBalance !== null) {
                 window.qxCustomStartingCapital = currentBalance.toString();
-                document.getElementById('modal-starting-capital').value = currentBalance.toFixed(2);
+                shadow.getElementById('modal-starting-capital').value = currentBalance.toFixed(2);
                 fixLeaderboardUI();
             }
             closeModal();
