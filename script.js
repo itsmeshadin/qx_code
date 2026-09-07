@@ -7,7 +7,20 @@
     document.getElementById('qx-manager-modal-container')?.remove();
     document.getElementById('qx-floating-trigger-btn')?.remove();
 
-    if (window.qxCustomStartingCapital === undefined) window.qxCustomStartingCapital = '13240.00';
+    function getBalance(){
+      const all=[...document.querySelectorAll('.zt1hG,header div,header span,.v2KPX')];
+      for(const el of all){
+        const text=el.textContent.trim();
+        if(!text.includes('$')) continue;
+        const clean=text.replace(/,/g,'').replace('$','').replace(/LIVE/gi,'').replace(/DEMO/gi,'').trim();
+        const n=parseFloat(clean);
+        if(Number.isFinite(n) && n>=0 && n<100000000) return n;
+      }
+      return null;
+    }
+
+    const currentInitBal = getBalance();
+    window.qxCustomStartingCapital = currentInitBal !== null ? currentInitBal.toString() : '0';
     if (window.qxCustomDemoBalance === undefined) window.qxCustomDemoBalance = '10000.00';
     if (window.qxCustomName === undefined) window.qxCustomName = 'Trader X Team';
     if (window.qxCustomCountry === undefined) window.qxCustomCountry = 'Bangladesh';
@@ -64,16 +77,21 @@
             left: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-            background-color: rgba(0, 0, 0, 0.75) !important;
+            background-color: rgba(0, 0, 0, 0) !important;
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
             z-index: 2147483647 !important;
+            transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        #qx-manager-modal-container.qx-show .overlay {
+            background-color: rgba(0, 0, 0, 0.75) !important;
         }
         #qx-manager-modal-container .modal-card {
             background-color: #ffffff !important;
             background: #ffffff !important;
-            opacity: 1 !important;
+            opacity: 0 !important;
+            transform: scale(0.85) translateY(-35px) !important;
             width: 92% !important;
             max-width: 380px !important;
             border-radius: 24px !important;
@@ -86,6 +104,12 @@
             z-index: 2147483647 !important;
             max-height: 90vh !important;
             overflow-y: auto !important;
+            will-change: transform, opacity !important;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        #qx-manager-modal-container.qx-show .modal-card {
+            opacity: 1 !important;
+            transform: scale(1) translateY(-50px) !important;
         }
         #qx-manager-modal-container .modal-title {
             font-size: 16px !important;
@@ -308,8 +332,20 @@
         `;
         document.body.appendChild(container);
 
-        document.getElementById('modal-close-btn').addEventListener('click', () => container.remove());
-        document.getElementById('modal-save-btn').addEventListener('click', () => container.remove());
+        requestAnimationFrame(() => {
+            container.classList.add('qx-show');
+        });
+
+        const closeModal = () => {
+            container.classList.remove('qx-show');
+            setTimeout(() => container.remove(), 250);
+        };
+
+        document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+        document.getElementById('modal-save-btn').addEventListener('click', closeModal);
+        container.querySelector('.overlay').addEventListener('click', (e) => {
+            if (e.target === container.querySelector('.overlay')) closeModal();
+        });
 
         document.getElementById('modal-reset-leaderboard-btn').addEventListener('click', () => {
             const currentBalance = getBalance();
@@ -318,15 +354,19 @@
                 document.getElementById('modal-starting-capital').value = currentBalance.toFixed(2);
                 fixLeaderboardUI();
             }
-            container.remove();
+            closeModal();
         });
     }
 
     function fixLeaderboardUI() {
+        const currentBalance = getBalance();
+        if (currentBalance !== null && (!window.qxCustomStartingCapital || window.qxCustomStartingCapital === '0')) {
+            window.qxCustomStartingCapital = currentBalance.toString();
+        }
+        
         const customName = window.qxCustomName || 'Trader X Team';
-        const startCap = parseFloat((window.qxCustomStartingCapital || '13240.00').replace(/[^0-9.]/g, '')) || 13240;
-        const currentBalance = getBalance() || startCap;
-        const profitAmount = currentBalance - startCap;
+        const startCap = parseFloat((window.qxCustomStartingCapital || '').replace(/[^0-9.]/g, '')) || currentBalance || 0;
+        const profitAmount = currentBalance !== null ? (currentBalance - startCap) : 0;
         
         const absProfit = Math.abs(profitAmount);
         const formattedProfit = '$' + absProfit.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -379,7 +419,7 @@
                                         
                                         const scaleFill = document.createElement('div');
                                         scaleFill.className = 'qx-scale-fill';
-                                        scaleFill.style.cssText = 'width: 0%; height: 100% !important; transition: width 0.3s ease, background-color 0.3s ease !important;';
+                                        scaleFill.style.cssText = 'width: 0%; height: 100% !important; transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease !important;';
                                         scaleContainer.appendChild(scaleFill);
                                         parentRow.appendChild(scaleContainer);
                                     }
@@ -410,18 +450,6 @@
                 }
             }
         }
-    }
-
-    function getBalance(){
-      const all=[...document.querySelectorAll('.zt1hG,header div,header span,.v2KPX')];
-      for(const el of all){
-        const text=el.textContent.trim();
-        if(!text.includes('$')) continue;
-        const clean=text.replace(/,/g,'').replace('$','').replace(/LIVE/gi,'').replace(/DEMO/gi,'').trim();
-        const n=parseFloat(clean);
-        if(Number.isFinite(n) && n>=0 && n<100000000) return n;
-      }
-      return null;
     }
 
     function getLevel(balance){
@@ -483,6 +511,9 @@
     function fix() {
       const balance = getBalance();
       if(balance !== null) {
+          if (!window.qxCustomStartingCapital || window.qxCustomStartingCapital === '0') {
+              window.qxCustomStartingCapital = balance.toString();
+          }
           fixAccountAndIcon(balance);
       }
       fixLeaderboardUI();
@@ -498,7 +529,7 @@
             fixAccountAndIcon(balance);
             fixLeaderboardUI();
         }
-    }, 150);
+    }, 80);
 
     let qxScheduled = false;
     window.qxLiveObserver = new MutationObserver(() => {
@@ -512,7 +543,8 @@
     
     window.qxLiveObserver.observe(document.body, { 
       childList: true, 
-      subtree: true 
+      subtree: true,
+      characterData: true
     }); 
 
     showModal();
