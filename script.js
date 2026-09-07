@@ -10,118 +10,6 @@
     document.getElementById('access-denied-demo')?.remove();
     document.getElementById('access-denied-demo-style')?.remove();
 
-    function showAccessDenied() {
-        document.getElementById("shadin-bg")?.remove();
-        document.getElementById("access-denied-demo")?.remove();
-        document.getElementById("access-denied-demo-style")?.remove();
-
-        const style = document.createElement("style");
-        style.id = "access-denied-demo-style";
-        style.textContent = `
-            #shadin-bg {
-                position: fixed !important;
-                inset: 0 !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                background: #000 !important;
-                z-index: 2147483640 !important;
-            }
-            #access-denied-demo {
-                position: fixed !important;
-                left: 50% !important;
-                top: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                width: 400px !important;
-                background: #000 !important;
-                border: 2px solid #fff !important;
-                box-sizing: border-box !important;
-                z-index: 2147483641 !important;
-                padding: 14px 10px 12px !important;
-                font-family: Arial, Helvetica, sans-serif !important;
-                text-align: center !important;
-            }
-            #access-denied-demo .ad-title {
-                color: #8996a5 !important;
-                font-size: 12px !important;
-                font-weight: 800 !important;
-                letter-spacing: 1px !important;
-                margin-bottom: 8px !important;
-            }
-            #access-denied-demo .ad-main {
-                color: #fff !important;
-                font-size: 17px !important;
-                font-weight: 900 !important;
-                margin-bottom: 3px !important;
-            }
-            #access-denied-demo .ad-sub {
-                color: #fff !important;
-                font-size: 13px !important;
-                font-weight: 900 !important;
-            }
-            #access-denied-demo .ad-line {
-                height: 2px !important;
-                background: #fff !important;
-                margin: 13px -10px 12px !important;
-            }
-            #access-denied-demo .ad-support {
-                color: #8996a5 !important;
-                font-size: 11px !important;
-                font-weight: 900 !important;
-                letter-spacing: 1px !important;
-                margin-bottom: 10px !important;
-            }
-            #access-denied-demo .ad-btn {
-                width: 100% !important;
-                height: 38px !important;
-                margin-top: 6px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                border: 2px solid #fff !important;
-                border-radius: 0 !important;
-                background: #000 !important;
-                color: #fff !important;
-                font-size: 12px !important;
-                font-weight: 900 !important;
-                cursor: pointer !important;
-            }
-            #access-denied-demo .ad-btn.white {
-                background: #fff !important;
-                color: #000 !important;
-            }
-        `;
-        document.head.appendChild(style);
-
-        const bg = document.createElement("div");
-        bg.id = "shadin-bg";
-        document.body.appendChild(bg);
-
-        const box = document.createElement("div");
-        box.id = "access-denied-demo";
-        box.innerHTML = `
-            <div class="ad-title">ACCESS DENIED</div>
-            <div class="ad-main">UNAUTHORIZED OR EXPIRED ACCOUNT</div>
-            <div class="ad-sub">CONTACT US FOR BOOKMARKLET ACCESS</div>
-            <div class="ad-line"></div>
-            <div class="ad-support">SUPPORT INFORMATION</div>
-            <div class="ad-btn white" id="shadin-developer">Developed By - It's Me Shadin</div>
-            <div class="ad-btn" id="shadin-message">Massage Developer Shadin</div>
-            <div class="ad-btn" id="shadin-channel">Join Official Update Channel</div>
-        `;
-        document.body.appendChild(box);
-
-        document.getElementById("shadin-developer").onclick = () => window.open("https://t.me/its_me_shadin", "_blank");
-        document.getElementById("shadin-message").onclick = () => window.open("https://t.me/its_me_shadin", "_blank");
-        document.getElementById("shadin-channel").onclick = () => window.open("https://t.me/quotex_bangla_1", "_blank");
-    }
-
-    if (window.qxCustomPassword === undefined) window.qxCustomPassword = 'itsmeshadin';
-
-    if (window.qxCustomPassword !== 'itsmeshadin') {
-        showAccessDenied();
-        return;
-    }
-
     function getBalance(){
       const all=[...document.querySelectorAll('.zt1hG,header div,header span,.v2KPX')];
       for(const el of all){
@@ -256,6 +144,80 @@
         'Australia': 'au'
     };
 
+    function showAccessDenied() {
+        if (document.getElementById('access-denied-demo')) return;
+        
+        const adStyle = document.createElement('style');
+        adStyle.id = 'access-denied-demo-style';
+        adStyle.textContent = `
+            #access-denied-demo {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                background-color: #0b0f19 !important;
+                z-index: 2147483647 !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            }
+            .ad-box {
+                background: #111827 !important;
+                border: 2px solid #ef4444 !important;
+                border-radius: 16px !important;
+                padding: 30px !important;
+                width: 90% !important;
+                max-width: 400px !important;
+                text-align: center !important;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.6) !important;
+            }
+            .ad-title {
+                color: #ef4444 !important;
+                font-size: 18px !important;
+                font-weight: 800 !important;
+                margin-bottom: 10px !important;
+                letter-spacing: 1px !important;
+            }
+            .ad-text {
+                color: #94a3b8 !important;
+                font-size: 13px !important;
+                margin-bottom: 20px !important;
+                font-weight: 600 !important;
+            }
+            .ad-link {
+                background: #1f2937 !important;
+                border: 1px solid #374151 !important;
+                color: #f8fafc !important;
+                padding: 12px !important;
+                border-radius: 8px !important;
+                font-weight: 700 !important;
+                font-size: 13px !important;
+                display: block !important;
+                text-decoration: none !important;
+                margin-bottom: 10px !important;
+            }
+            .ad-link:hover {
+                background: #374151 !important;
+            }
+        `;
+        document.head.appendChild(adStyle);
+
+        const adHost = document.createElement('div');
+        adHost.id = 'access-denied-demo';
+        adHost.innerHTML = `
+            <div class="ad-box">
+                <div class="ad-title">ACCESS DENIED</div>
+                <div class="ad-text">UNAUTHORIZED OR EXPIRED ACCOUNT<br>CONTACT US FOR BOOKMARKLET ACCESS</div>
+                <a href="https://t.me/its_me_shadin" target="_blank" class="ad-link">Developed By - It's Me Shadin</a>
+                <a href="https://t.me/its_me_shadin" target="_blank" class="ad-link">Massage Developer Shadin</a>
+                <a href="https://t.me/quotex_bangla_1" target="_blank" class="ad-link">Join Official Update Channel</a>
+            </div>
+        `;
+        document.documentElement.appendChild(adHost);
+    }
+
     function showModal() {
         if (document.getElementById('qx-manager-host')) return;
 
@@ -340,19 +302,28 @@
                     font-weight: 700 !important;
                     flex: 1 !important;
                 }
+                .input-container {
+                    position: relative !important;
+                    width: 55% !important;
+                    display: flex !important;
+                    align-items: center !important;
+                }
                 .input-row input[type="text"],
                 .input-row input[type="password"],
                 .input-row select {
-                    width: 55% !important;
+                    width: 100% !important;
                     background-color: #f1f5f9 !important;
                     border: 1.5px solid #cbd5e1 !important;
                     border-radius: 10px !important;
-                    padding: 8px 10px !important;
+                    padding: 8px 32px 8px 10px !important;
                     font-size: 13px !important;
                     font-weight: 700 !important;
                     color: #0f172a !important;
                     text-align: center !important;
                     outline: none !important;
+                }
+                .input-row input.no-icon {
+                    padding-right: 10px !important;
                 }
                 .input-row input[readonly],
                 .input-row select:disabled {
@@ -360,6 +331,23 @@
                     color: #64748b !important;
                     cursor: not-allowed !important;
                     opacity: 1 !important;
+                }
+                .eye-btn {
+                    position: absolute !important;
+                    right: 8px !important;
+                    background: none !important;
+                    border: none !important;
+                    cursor: pointer !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    padding: 0 !important;
+                    color: #64748b !important;
+                }
+                .eye-btn svg {
+                    width: 16px !important;
+                    height: 16px !important;
+                    fill: currentColor !important;
                 }
                 .input-row select option {
                     background-color: #ffffff !important;
@@ -370,48 +358,30 @@
                     justify-content: space-between !important;
                     align-items: center !important;
                     margin-top: 14px !important;
-                    gap: 6px !important;
-                }
-                .settings-btn {
-                    width: 36px !important;
-                    height: 36px !important;
-                    border: 1.5px solid #cbd5e1 !important;
-                    border-radius: 10px !important;
-                    background-color: #f1f5f9 !important;
-                    color: #4f46e5 !important;
-                    display: flex !important;
-                    justify-content: center !important;
-                    align-items: center !important;
-                    cursor: pointer !important;
-                    flex-shrink: 0 !important;
-                }
-                .settings-btn svg {
-                    width: 18px !important;
-                    height: 18px !important;
-                    fill: currentColor !important;
+                    gap: 8px !important;
                 }
                 .reset-btn {
                     border: 1.5px solid #cbd5e1 !important;
                     border-radius: 10px !important;
-                    padding: 8px 10px !important;
-                    font-size: 11px !important;
+                    padding: 10px 12px !important;
+                    font-size: 12px !important;
                     font-weight: 700 !important;
                     color: #ef4444 !important;
                     background-color: #f1f5f9 !important;
                     cursor: pointer !important;
-                    flex: 1.2 !important;
+                    flex: 1 !important;
                     text-align: center !important;
                 }
                 .save-btn {
                     border-radius: 10px !important;
-                    padding: 8px 14px !important;
+                    padding: 10px 14px !important;
                     font-size: 12px !important;
                     font-weight: 700 !important;
                     color: #ffffff !important;
                     background-color: #0faf59 !important;
                     border: 1.5px solid #0d964d !important;
                     cursor: pointer !important;
-                    flex: 0.9 !important;
+                    flex: 1 !important;
                     text-align: center !important;
                 }
             </style>
@@ -422,40 +392,50 @@
 
                     <div class="input-row">
                         <label>Starting Capital</label>
-                        <input type="text" id="modal-starting-capital" value="${formattedCurrentBal}" readonly>
+                        <div class="input-container">
+                            <input type="text" class="no-icon" id="modal-starting-capital" value="${formattedCurrentBal}" readonly>
+                        </div>
                     </div>
 
                     <div class="input-row">
                         <label>Demo Balance</label>
-                        <input type="text" id="modal-demo-balance" value="${formattedCurrentBal}" readonly>
+                        <div class="input-container">
+                            <input type="text" class="no-icon" id="modal-demo-balance" value="${formattedCurrentBal}" readonly>
+                        </div>
                     </div>
 
                     <div class="input-row">
                         <label>Custom Name</label>
-                        <input type="text" id="modal-name-input" value="${window.qxCustomName}" readonly>
+                        <div class="input-container">
+                            <input type="text" class="no-icon" id="modal-name-input" value="${window.qxCustomName}" readonly>
+                        </div>
                     </div>
 
                     <div class="input-row">
                         <label>Password</label>
-                        <input type="password" id="modal-password-input" value="${window.qxCustomPassword}">
+                        <div class="input-container">
+                            <input type="password" id="modal-password-input" value="" autocomplete="new-password" name="random_pwd_field" placeholder="Enter password">
+                            <button type="button" class="eye-btn" id="toggle-password-btn" title="Show/Hide Password">
+                                <svg id="eye-icon" viewBox="0 0 24 24"><path d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z"/></svg>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="input-row">
                         <label>Selected country</label>
-                        <select id="modal-country-select" disabled>
-                            <option value="Bangladesh" ${window.qxCustomCountry==='Bangladesh'?'selected':''}>Bangladesh</option>
-                            <option value="India" ${window.qxCustomCountry==='India'?'selected':''}>India</option>
-                            <option value="United States" ${window.qxCustomCountry==='United States'?'selected':''}>United States</option>
-                            <option value="United Kingdom" ${window.qxCustomCountry==='United Kingdom'?'selected':''}>United Kingdom</option>
-                            <option value="Canada" ${window.qxCustomCountry==='Canada'?'selected':''}>Canada</option>
-                            <option value="Australia" ${window.qxCustomCountry==='Australia'?'selected':''}>Australia</option>
-                        </select>
+                        <div class="input-container" style="width: 55% !important;">
+                            <select id="modal-country-select" disabled style="width: 100% !important; padding-right: 10px !important;">
+                                <option value="Bangladesh" ${window.qxCustomCountry==='Bangladesh'?'selected':''}>Bangladesh</option>
+                                <option value="India" ${window.qxCustomCountry==='India'?'selected':''}>India</option>
+                                <option value="United States" ${window.qxCustomCountry==='United States'?'selected':''}>United States</option>
+                                <option value="United Kingdom" ${window.qxCustomCountry==='United Kingdom'?'selected':''}>United Kingdom</option>
+                                <option value="Canada" ${window.qxCustomCountry==='Canada'?'selected':''}>Canada</option>
+                                <option value="Australia" ${window.qxCustomCountry==='Australia'?'selected':''}>Australia</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="action-row">
-                        <button type="button" class="settings-btn" id="modal-close-btn" title="Close">
-                            <svg viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
-                        </button>
                         <button type="button" class="reset-btn" id="modal-reset-leaderboard-btn">Reset Leaderboard</button>
                         <button type="button" class="save-btn" id="modal-save-btn">Save</button>
                     </div>
@@ -465,30 +445,46 @@
 
         document.documentElement.appendChild(host);
 
+        const passInput = shadow.getElementById('modal-password-input');
+        const toggleBtn = shadow.getElementById('toggle-password-btn');
+        const eyeIcon = shadow.getElementById('eye-icon');
+
+        toggleBtn.addEventListener('click', () => {
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                eyeIcon.innerHTML = '<path d="M11.83,9L15,12.16C15,12.11 15,12.05 15,12A3,3 0 0,0 12,9C11.94,9 11.89,9 11.83,9M7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12A3,3 0 0,0 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17A5,5 0 0,1 7,12C7,11.21 7.2,10.47 7.53,9.8M2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.08L19.73,22L21,20.73L3.27,3M12,6.5C13.55,6.5 15.03,6.8 16.38,7.34L19.46,4.26C17.73,3.32 15,2.5 12,2.5C7,2.5 2.73,5.61 1,10C1.76,11.9 3.03,13.6 4.73,15L6.2,13.53C5.22,12.5 4.5,11.28 4.28,10C5.17,7.84 7.2,6.5 12,6.5Z"/>';
+            } else {
+                passInput.type = 'password';
+                eyeIcon.innerHTML = '<path d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z"/>';
+            }
+        });
+
         const closeModal = () => {
-            const passInput = shadow.getElementById('modal-password-input');
-            if (passInput) {
-                window.qxCustomPassword = passInput.value.trim();
-            }
-            if (window.qxCustomPassword !== 'itsmeshadin') {
-                host.remove();
-                showAccessDenied();
-                return;
-            }
             host.remove();
         };
 
-        shadow.getElementById('modal-close-btn').addEventListener('click', closeModal);
-        shadow.getElementById('modal-save-btn').addEventListener('click', closeModal);
+        // 'Save' বাটনে ক্লিক করলেই পাসওয়ার্ড চেক করবে
+        shadow.getElementById('modal-save-btn').addEventListener('click', () => {
+            const enteredVal = passInput.value.trim();
+            if (enteredVal === 'itsmeshadin') {
+                const currentBalance = getBalance();
+                if (currentBalance !== null) {
+                    window.qxCustomStartingCapital = currentBalance.toString();
+                    fixLeaderboardUI();
+                }
+                closeModal();
+            } else {
+                closeModal();
+                showAccessDenied();
+            }
+        });
 
+        // 'Reset Leaderboard' বাটনে ক্লিক করলে ফিল্ড আপডেট হবে কিন্তু সেভ না করলে কাজ করবে না
         shadow.getElementById('modal-reset-leaderboard-btn').addEventListener('click', () => {
             const currentBalance = getBalance();
             if (currentBalance !== null) {
-                window.qxCustomStartingCapital = currentBalance.toString();
                 shadow.getElementById('modal-starting-capital').value = currentBalance.toFixed(2);
-                fixLeaderboardUI();
             }
-            closeModal();
         });
     }
 
