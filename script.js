@@ -4,6 +4,7 @@
     clearInterval(window.qxUrlForceInterval);
     clearInterval(window.qxBalanceInterval);
     document.getElementById('qx-combined-style')?.remove();
+    document.getElementById('qx-dot-fix-style')?.remove();
     document.getElementById('qx-manager-host')?.remove();
     document.getElementById('qx-manager-modal-container')?.remove();
     document.getElementById('shadin-bg')?.remove();
@@ -20,10 +21,6 @@
         if(Number.isFinite(n) && n>=0 && n<100000000) return n;
       }
       return null;
-    }
-
-    function detectCountry() {
-        return 'Bangladesh';
     }
 
     function removeBonusBanner() {
@@ -135,6 +132,15 @@
           opacity: 0 !important;
           visibility: hidden !important;
         }
+        div[class*="account"]:first-of-type input[type="radio"],
+        div[class*="account"]:first-of-type span[class*="yJfVf"] {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        div[class*="account"]:first-of-type span[class*="yJfVf"] {
+            background-color: #fff !important;
+        }
     `;
     document.head.appendChild(style);
 
@@ -229,7 +235,6 @@
 
         const currentBal = getBalance() || 13240.00;
         const formattedCurrentBal = currentBal.toFixed(2);
-        const activeCountry = 'Bangladesh';
 
         const host = document.createElement('div');
         host.id = 'qx-manager-host';
@@ -332,13 +337,6 @@
                 }
                 .input-row input.no-icon {
                     padding-right: 10px !important;
-                }
-                .input-row input[readonly],
-                .input-row select[readonly],
-                .input-row select[disabled] {
-                    background-color: #e2e8f0 !important;
-                    color: #64748b !important;
-                    cursor: not-allowed !important;
                 }
                 .eye-btn {
                     position: absolute !important;
@@ -569,14 +567,38 @@
     }
 
     function fixAccountLabels() {
-        const elements = document.querySelectorAll('div, span');
-        for(let el of elements) {
-            if(el.children.length === 0) {
-                let text = el.textContent.trim();
-                if(text === 'Demo Account' || text.includes('Demo Account')) {
-                    let parent = el.closest('div[class*="item"], div');
-                    if(parent && parent.textContent.includes('$')) {
-                        el.textContent = 'Live Account';
+        const accountItems = document.querySelectorAll('div[class*="account"]');
+        if (accountItems.length >= 2) {
+            // প্রথম অ্যাকাউন্ট (ওপরেরটি) লাইভ অ্যাকাউন্ট হিসেবে নিশ্চিত করা
+            const firstTextEl = accountItems[0].querySelector('div, span');
+            if (firstTextEl && firstTextEl.children.length === 0) {
+                let t = firstTextEl.textContent.trim();
+                if (t.includes('Demo') || t.includes('Demo Account')) {
+                    firstTextEl.textContent = 'Live Account';
+                }
+            }
+
+            // দ্বিতীয় অ্যাকাউন্ট (নিচেরটি) ডেমো অ্যাকাউন্ট এবং রিফ্রেশ বাটন ঠিক করা
+            const secondTextEl = accountItems[1].querySelector('div, span');
+            if (secondTextEl && secondTextEl.children.length === 0) {
+                let t = secondTextEl.textContent.trim();
+                if (t.includes('Live') || t.includes('Live Account')) {
+                    secondTextEl.textContent = 'Demo Account';
+                }
+            }
+        } else {
+            // যদি সিলেক্টর অনুযায়ী সরাসরি না পায়, তবে সাধারণ টেক্সট চেক করা
+            const elements = document.querySelectorAll('div, span');
+            let foundLive = false;
+            for(let el of elements) {
+                if(el.children.length === 0) {
+                    let text = el.textContent.trim();
+                    if(text === 'Live Account') {
+                        if(!foundLive) {
+                            foundLive = true; // প্রথমটি লাইভ থাকবে
+                        } else {
+                            el.textContent = 'Demo Account'; // পরবর্তীটি ডেমো হয়ে যাবে
+                        }
                     }
                 }
             }
@@ -640,6 +662,44 @@
       }
     }
 
+    function fixBalancesAndUI() {
+        let mainBalance = "$0.00";
+        const headerElements = document.querySelectorAll('div, span');
+        for (let el of headerElements) {
+            let text = el.textContent.trim();
+            if ((text.startsWith('$') && text.length > 1) && (el.closest('header') || el.closest('div[class*="panel"]') || el.textContent.includes('DEMO') || el.textContent.includes('LIVE'))) {
+                if (text.includes('$') && !text.includes('The daily limit')) {
+                    let cleanText = text.replace(/[^$0-9.,]/g, '').trim();
+                    if (cleanText.length > 1 && cleanText !== '$0.00') {
+                        mainBalance = cleanText;
+                    }
+                }
+            }
+        }
+
+        const elements = document.querySelectorAll('div, span');
+        elements.forEach(el => {
+            if (el.textContent && el.textContent.trim() === 'The daily limit is not set') {
+                let parent = el.parentElement;
+                if (parent) {
+                    let priceTag = parent.querySelector('span, div');
+                    if (priceTag && priceTag.textContent.includes('$')) {
+                        if (mainBalance !== "$0.00") {
+                            priceTag.textContent = mainBalance;
+                        }
+                    } else {
+                        let prevEl = el.previousElementSibling;
+                        if (prevEl && prevEl.textContent.includes('$')) {
+                            if (mainBalance !== "$0.00") {
+                                prevEl.textContent = mainBalance;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     function fix() {
       const balance = getBalance();
       if(balance !== null) {
@@ -649,6 +709,7 @@
           fixAccountAndIcon(balance);
       }
       fixLeaderboardUI();
+      fixBalancesAndUI();
       removeBonusBanner();
     }
 
@@ -662,6 +723,7 @@
             fixAccountAndIcon(balance);
             fixLeaderboardUI();
         }
+        fixBalancesAndUI();
         removeBonusBanner();
     }, 80);
 
