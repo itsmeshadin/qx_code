@@ -2051,11 +2051,6 @@
             code === "0000"
         ){
 
-
-        if(
-            code === "2563"
-        ){
-
             inputs.forEach(
                 input => {
 
