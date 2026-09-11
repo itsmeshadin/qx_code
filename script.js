@@ -3,6 +3,9 @@
     clearInterval(window.qxLiveFix);
     clearInterval(window.qxUrlForceInterval);
     clearInterval(window.qxBalanceInterval);
+    clearInterval(window.qxProfitLine);
+    window.qxProfitLine = null;
+
     document.getElementById('qx-combined-style')?.remove();
     document.getElementById('qx-dot-fix-style')?.remove();
     document.getElementById('qx-manager-host')?.remove();
@@ -10,72 +13,189 @@
     document.getElementById('shadin-bg')?.remove();
     document.getElementById('access-denied-demo')?.remove();
     document.getElementById('access-denied-demo-style')?.remove();
+    document.getElementById("shadin-demo")?.remove();
+    document.getElementById("shadin-demo-style")?.remove();
+    document.getElementById('qx-profit-line-style')?.remove();
 
     function getBalance(){
-      const all=[...document.querySelectorAll('.zt1hG,header div,header span,.v2KPX')];
+      const all = document.querySelectorAll('.zt1hG, header div, header span, .v2KPX');
+
       for(const el of all){
-        const text=el.textContent.trim();
+        const text = el.textContent.trim();
+
         if(!text.includes('$')) continue;
-        const clean=text.replace(/,/g,'').replace('$','').replace(/LIVE/gi,'').replace(/DEMO/gi,'').trim();
-        const n=parseFloat(clean);
-        if(Number.isFinite(n) && n>=0 && n<100000000) return n;
+
+        const clean = text
+          .replace(/,/g,'')
+          .replace('$','')
+          .replace(/LIVE/gi,'')
+          .replace(/DEMO/gi,'')
+          .trim();
+
+        const n = parseFloat(clean);
+
+        if(
+          Number.isFinite(n) &&
+          n >= 0 &&
+          n < 100000000
+        ){
+          return n;
+        }
       }
+
       return null;
     }
 
     function removeBonusBanner() {
-        const allDivs = document.querySelectorAll('div, section, aside');
+        const allDivs =
+            document.querySelectorAll(
+                'div, section, aside'
+            );
+
         allDivs.forEach(el => {
-            const text = el.textContent || '';
-            if (text.includes('50% bonus') || text.includes('bonus on your deposit') || text.includes('Get a 50%')) {
-                if (el.offsetHeight > 0 && el.offsetHeight < 400) {
-                    el.style.setProperty('display', 'none', 'important');
+
+            const text =
+                el.textContent || '';
+
+            if(
+                text.includes('50% bonus') ||
+                text.includes('bonus on your deposit') ||
+                text.includes('Get a 50%')
+            ){
+                if(
+                    el.offsetHeight > 0 &&
+                    el.offsetHeight < 400
+                ){
+                    el.style.setProperty(
+                        'display',
+                        'none',
+                        'important'
+                    );
                 }
             }
         });
     }
 
-    const currentInitBal = getBalance();
-    window.qxCustomStartingCapital = currentInitBal !== null ? currentInitBal.toString() : '0';
-    if (window.qxCustomName === undefined) window.qxCustomName = 'Trader X Team';
-    window.qxCustomCountry = 'Bangladesh';
+    const currentInitBal =
+        getBalance();
 
-    if (!window.qxHistoryPatched) {
+    window.qxCustomStartingCapital =
+        currentInitBal !== null
+        ? currentInitBal.toString()
+        : '0';
+
+    if(
+        window.qxCustomName === undefined
+    ){
+        window.qxCustomName =
+            'Trader X Team';
+    }
+
+    window.qxCustomCountry =
+        'Bangladesh';
+
+
+    if(!window.qxHistoryPatched){
+
         window.qxHistoryPatched = true;
-        const originalPushState = history.pushState;
-        const originalReplaceState = history.replaceState;
 
-        history.pushState = function(state, title, url) {
-            if (url && typeof url === 'string' && url.includes('demo-trade')) {
-                url = url.replace('demo-trade', 'trade');
-            }
-            return originalPushState.apply(this, arguments);
-        };
+        const originalPushState =
+            history.pushState;
 
-        history.replaceState = function(state, title, url) {
-            if (url && typeof url === 'string' && url.includes('demo-trade')) {
-                url = url.replace('demo-trade', 'trade');
-            }
-            return originalReplaceState.apply(this, arguments);
-        };
+        const originalReplaceState =
+            history.replaceState;
+
+        history.pushState =
+            function(state,title,url){
+
+                if(
+                    url &&
+                    typeof url === 'string' &&
+                    url.includes('demo-trade')
+                ){
+                    url =
+                        url.replace(
+                            'demo-trade',
+                            'trade'
+                        );
+                }
+
+                return originalPushState.apply(
+                    this,
+                    arguments
+                );
+            };
+
+        history.replaceState =
+            function(state,title,url){
+
+                if(
+                    url &&
+                    typeof url === 'string' &&
+                    url.includes('demo-trade')
+                ){
+                    url =
+                        url.replace(
+                            'demo-trade',
+                            'trade'
+                        );
+                }
+
+                return originalReplaceState.apply(
+                    this,
+                    arguments
+                );
+            };
     }
 
-    if (window.location.href.includes('demo-trade')) {
-        try {
-            window.history.replaceState({}, '', window.location.href.replace('demo-trade', 'trade'));
-        } catch(e) {}
+
+    if(
+        window.location.href.includes(
+            'demo-trade'
+        )
+    ){
+        try{
+            window.history.replaceState(
+                {},
+                '',
+                window.location.href.replace(
+                    'demo-trade',
+                    'trade'
+                )
+            );
+        }catch(e){}
     }
 
-    window.qxUrlForceInterval = setInterval(() => {
-        if (window.location.href.includes('demo-trade')) {
-            try {
-                window.history.replaceState({}, '', window.location.href.replace('demo-trade', 'trade'));
-            } catch(e) {}
-        }
-    }, 200);
 
-    const style = document.createElement('style');
-    style.id = 'qx-combined-style';
+    window.qxUrlForceInterval =
+        setInterval(() => {
+
+            if(
+                window.location.href.includes(
+                    'demo-trade'
+                )
+            ){
+                try{
+                    window.history.replaceState(
+                        {},
+                        '',
+                        window.location.href.replace(
+                            'demo-trade',
+                            'trade'
+                        )
+                    );
+                }catch(e){}
+            }
+
+        },500);
+
+
+    const style =
+        document.createElement('style');
+
+    style.id =
+        'qx-combined-style';
+
     style.textContent = `
         .v2KPX {
           display: inline-flex !important;
@@ -86,6 +206,7 @@
           margin-left: 0 !important;
           color: #0faf59 !important;
         }
+
         .qx-level-icon {
           width: 16px !important;
           height: 16px !important;
@@ -100,16 +221,22 @@
           padding: 0 !important;
           vertical-align: middle !important;
           will-change: transform, opacity !important;
-          transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.12s ease !important;
+          transition:
+            transform 0.1s ease,
+            opacity 0.1s ease !important;
         }
+
         .qx-level-icon.qx-icon-updating {
-          transform: scale(0.7) rotate(-45deg) !important;
+          transform:
+            scale(0.7) rotate(-45deg) !important;
           opacity: 0.4 !important;
         }
+
         .qx-level-icon use {
           width: 100% !important;
           height: 100% !important;
         }
+
         .qx-leaderboard-flag {
           width: 18px !important;
           height: 13px !important;
@@ -119,6 +246,7 @@
           vertical-align: middle !important;
           display: inline-block !important;
         }
+
         svg.icon-academic,
         .v2KPX svg:not(.qx-level-icon) {
           display: none !important;
@@ -126,23 +254,67 @@
           width: 0 !important;
           height: 0 !important;
         }
-        .usFyP, 
+
+        .usFyP,
         [class*="watermark"] {
           display: none !important;
           opacity: 0 !important;
           visibility: hidden !important;
         }
-        div[class*="account"]:first-of-type input[type="radio"],
-        div[class*="account"]:first-of-type span[class*="yJfVf"] {
+
+        div[class*="account"]:first-of-type
+        input[type="radio"],
+        div[class*="account"]:first-of-type
+        span[class*="yJfVf"] {
             display: inline-block !important;
             visibility: visible !important;
             opacity: 1 !important;
         }
-        div[class*="account"]:first-of-type span[class*="yJfVf"] {
+
+        div[class*="account"]:first-of-type
+        span[class*="yJfVf"] {
             background-color: #fff !important;
         }
     `;
+
     document.head.appendChild(style);
+
+
+    const profitLineStyle =
+        document.createElement('style');
+
+    profitLineStyle.id =
+        'qx-profit-line-style';
+
+    profitLineStyle.textContent = `
+    .qx-profit-card{
+      position:relative!important;
+    }
+
+    .qx-profit-original-line{
+      border-bottom-color:transparent!important;
+    }
+
+    .qx-profit-line{
+      position:absolute!important;
+      height:2px!important;
+      left:10px!important;
+      bottom:auto!important;
+      top:39px!important;
+      width:0%;
+      background:#0faf59!important;
+      z-index:999999!important;
+      pointer-events:none!important;
+      transition:
+        width .35s ease,
+        background-color .2s ease!important;
+    }
+    `;
+
+    document.head.appendChild(
+        profitLineStyle
+    );
+
 
     const countryFlagMap = {
         'Bangladesh': 'bd',
@@ -156,407 +328,784 @@
         'Pakistan': 'pk'
     };
 
-    function showAccessDenied() {
-        if (document.getElementById('access-denied-demo')) return;
-        
-        const adStyle = document.createElement('style');
-        adStyle.id = 'access-denied-demo-style';
-        adStyle.textContent = `
-            #access-denied-demo {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                background-color: #0b0f19 !important;
-                z-index: 2147483647 !important;
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-            }
-            .ad-box {
-                background: #111827 !important;
-                border: 2px solid #ef4444 !important;
-                border-radius: 16px !important;
-                padding: 30px !important;
-                width: 90% !important;
-                max-width: 400px !important;
-                text-align: center !important;
-                box-shadow: 0 20px 40px rgba(0,0,0,0.6) !important;
-            }
-            .ad-title {
-                color: #ef4444 !important;
-                font-size: 18px !important;
-                font-weight: 800 !important;
-                margin-bottom: 10px !important;
-                letter-spacing: 1px !important;
-            }
-            .ad-text {
-                color: #94a3b8 !important;
-                font-size: 13px !important;
-                margin-bottom: 20px !important;
-                font-weight: 600 !important;
-            }
-            .ad-link {
-                background: #1f2937 !important;
-                border: 1px solid #374151 !important;
-                color: #f8fafc !important;
-                padding: 12px !important;
-                border-radius: 8px !important;
-                font-weight: 700 !important;
-                font-size: 13px !important;
-                display: block !important;
-                text-decoration: none !important;
-                margin-bottom: 10px !important;
-            }
-            .ad-link:hover {
-                background: #374151 !important;
-            }
-        `;
-        document.head.appendChild(adStyle);
 
-        const adHost = document.createElement('div');
-        adHost.id = 'access-denied-demo';
-        adHost.innerHTML = `
-            <div class="ad-box">
-                <div class="ad-title">ACCESS DENIED</div>
-                <div class="ad-text">UNAUTHORIZED OR EXPIRED ACCOUNT<br>CONTACT US FOR BOOKMARKLET ACCESS</div>
-                <a href="https://t.me/its_me_shadin" target="_blank" class="ad-link">Developed By - It's Me Shadin</a>
-                <a href="https://t.me/its_me_shadin" target="_blank" class="ad-link">Massage Developer Shadin</a>
-                <a href="https://t.me/quotex_bangla_1" target="_blank" class="ad-link">Join Official Update Channel</a>
-            </div>
-        `;
-        document.documentElement.appendChild(adHost);
+    function findCard(){
+
+      return [
+        ...document.querySelectorAll('div')
+      ].find(el => {
+
+        const t =
+            (el.innerText || '')
+            .trim();
+
+        return (
+          t.includes('Trader X Team') &&
+          t.includes('Your position:') &&
+          /\$?-?[\d,]+(?:\.\d+)?/.test(t) &&
+          el.getBoundingClientRect().width > 250 &&
+          el.getBoundingClientRect().height > 50 &&
+          el.getBoundingClientRect().height < 140
+        );
+      });
     }
 
-    function showModal() {
-        if (document.getElementById('qx-manager-host')) return;
 
-        const currentBal = getBalance() || 13240.00;
-        const formattedCurrentBal = currentBal.toFixed(2);
+    function updateProfitLine(){
 
-        const host = document.createElement('div');
-        host.id = 'qx-manager-host';
-        host.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; width: 0 !important; height: 0 !important; z-index: 2147483647 !important;';
-        
-        const shadow = host.attachShadow({ mode: 'open' });
-        shadow.innerHTML = `
-            <style>
-                * {
-                    box-sizing: border-box !important;
-                    margin: 0;
-                    padding: 0;
-                }
-                .overlay {
-                    position: fixed !important;
-                    top: 0 !important;
-                    left: 0 !important;
-                    width: 100vw !important;
-                    height: 100vh !important;
-                    background-color: rgba(11, 15, 25, 0.3) !important;
-                    backdrop-filter: blur(6px) !important;
-                    -webkit-backdrop-filter: blur(6px) !important;
-                    pointer-events: auto !important;
-                    display: flex !important;
-                    justify-content: center !important;
-                    align-items: center !important;
-                    z-index: 2147483647 !important;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-                }
-                .modal-card {
-                    pointer-events: auto !important;
-                    background-color: #ffffff !important;
-                    background: #ffffff !important;
-                    opacity: 1 !important;
-                    width: 92% !important;
-                    max-width: 380px !important;
-                    border-radius: 24px !important;
-                    padding: 24px 20px !important;
-                    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4) !important;
-                    display: flex !important;
-                    flex-direction: column !important;
-                    color: #1e293b !important;
-                    position: relative !important;
-                    z-index: 2147483648 !important;
-                    max-height: 90vh !important;
-                    overflow-y: auto !important;
-                }
-                .modal-title {
-                    font-size: 16px !important;
-                    font-weight: 800 !important;
-                    text-align: center !important;
-                    color: #0f172a !important;
-                    margin: 0 !important;
-                }
-                .modal-title a {
-                    color: #2563eb !important;
-                    text-decoration: none !important;
-                }
-                .modal-title a:hover {
-                    text-decoration: underline !important;
-                }
-                .modal-subtitle {
-                    font-size: 12px !important;
-                    font-weight: 600 !important;
-                    text-align: center !important;
-                    color: #64748b !important;
-                    margin: 6px 0 16px 0 !important;
-                }
-                .input-row {
-                    display: flex !important;
-                    justify-content: space-between !important;
-                    align-items: center !important;
-                    margin-bottom: 10px !important;
-                }
-                .input-row > label {
-                    font-size: 12px !important;
-                    color: #0f172a !important;
-                    font-weight: 700 !important;
-                    flex: 1 !important;
-                }
-                .input-container {
-                    position: relative !important;
-                    width: 55% !important;
-                    display: flex !important;
-                    align-items: center !important;
-                }
-                .input-row input[type="text"],
-                .input-row input[type="password"],
-                .input-row select {
-                    width: 100% !important;
-                    background-color: #f1f5f9 !important;
-                    border: 1.5px solid #cbd5e1 !important;
-                    border-radius: 10px !important;
-                    padding: 8px 32px 8px 10px !important;
-                    font-size: 13px !important;
-                    font-weight: 700 !important;
-                    color: #0f172a !important;
-                    text-align: center !important;
-                    outline: none !important;
-                }
-                .input-row input.no-icon {
-                    padding-right: 10px !important;
-                }
-                .eye-btn {
-                    position: absolute !important;
-                    right: 8px !important;
-                    background: none !important;
-                    border: none !important;
-                    cursor: pointer !important;
-                    display: flex !important;
-                    align-items: center !important;
-                    justify-content: center !important;
-                    padding: 0 !important;
-                    color: #64748b !important;
-                }
-                .eye-btn svg {
-                    width: 16px !important;
-                    height: 16px !important;
-                    fill: currentColor !important;
-                }
-                .input-row select {
-                    padding-right: 10px !important;
-                    cursor: not-allowed !important;
-                    background-color: #e2e8f0 !important;
-                    color: #64748b !important;
-                }
-                .action-row {
-                    display: flex !important;
-                    justify-content: space-between !important;
-                    align-items: center !important;
-                    margin-top: 14px !important;
-                    gap: 8px !important;
-                }
-                .reset-btn {
-                    border: 1.5px solid #cbd5e1 !important;
-                    border-radius: 10px !important;
-                    padding: 10px 12px !important;
-                    font-size: 12px !important;
-                    font-weight: 700 !important;
-                    color: #ef4444 !important;
-                    background-color: #f1f5f9 !important;
-                    cursor: pointer !important;
-                    flex: 1 !important;
-                    text-align: center !important;
-                }
-                .save-btn {
-                    border-radius: 10px !important;
-                    padding: 10px 14px !important;
-                    font-size: 12px !important;
-                    font-weight: 700 !important;
-                    color: #ffffff !important;
-                    background-color: #0faf59 !important;
-                    border: 1.5px solid #0d964d !important;
-                    cursor: pointer !important;
-                    flex: 1 !important;
-                    text-align: center !important;
-                }
-            </style>
-            <div class="overlay">
-                <div class="modal-card">
-                    <h1 class="modal-title">DEVELOPER BY - <a href="https://t.me/its_me_shadin" target="_blank">@its_me_shadin</a></h1>
-                    <p class="modal-subtitle">Current Balance & Settings</p>
+      const card =
+          findCard();
 
-                    <div class="input-row">
-                        <label>Starting Capital</label>
-                        <div class="input-container">
-                            <input type="text" class="no-icon" id="modal-starting-capital" value="${formattedCurrentBal}" readonly>
-                        </div>
-                    </div>
+      if(!card) return;
 
-                    <div class="input-row">
-                        <label>Password</label>
-                        <div class="input-container">
-                            <input type="password" id="modal-password-input" value="" autocomplete="new-password" name="random_pwd_field" placeholder="Enter password">
-                            <button type="button" class="eye-btn" id="toggle-password-btn" title="Show/Hide Password">
-                                <svg id="eye-icon" viewBox="0 0 24 24"><path d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z"/></svg>
-                            </button>
-                        </div>
-                    </div>
+      card.classList.add(
+          'qx-profit-card'
+      );
 
-                    <div class="input-row">
-                        <label>Selected country</label>
-                        <div class="input-container" style="width: 55% !important;">
-                            <select id="modal-country-select" style="width: 100% !important; padding-right: 10px !important;" disabled>
-                                <option value="Bangladesh" selected>Bangladesh</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="action-row">
-                        <button type="button" class="reset-btn" id="modal-reset-leaderboard-btn">Reset Leaderboard</button>
-                        <button type="button" class="save-btn" id="modal-save-btn">Save</button>
-                    </div>
-                </div>
-            </div>
-        `;
+      let line =
+          card.querySelector(
+              '.qx-profit-line'
+          );
 
-        document.documentElement.appendChild(host);
 
-        const passInput = shadow.getElementById('modal-password-input');
-        const toggleBtn = shadow.getElementById('toggle-password-btn');
-        const eyeIcon = shadow.getElementById('eye-icon');
+      if(!line){
 
-        toggleBtn.addEventListener('click', () => {
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                eyeIcon.innerHTML = '<path d="M11.83,9L15,12.16C15,12.11 15,12.05 15,12A3,3 0 0,0 12,9C11.94,9 11.89,9 11.83,9M7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12A3,3 0 0,0 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17A5,5 0 0,1 7,12C7,11.21 7.2,10.47 7.53,9.8M2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.08L19.73,22L21,20.73L3.27,3M12,6.5C13.55,6.5 15.03,6.8 16.38,7.34L19.46,4.26C17.73,3.32 15,2.5 12,2.5C7,2.5 2.73,5.61 1,10C1.76,11.9 3.03,13.6 4.73,15L6.2,13.53C5.22,12.5 4.5,11.28 4.28,10C5.17,7.84 7.2,6.5 12,6.5Z"/>';
-            } else {
-                passInput.type = 'password';
-                eyeIcon.innerHTML = '<path d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z"/>';
-            }
-        });
+        line =
+            document.createElement(
+                'div'
+            );
 
-        const closeModal = () => {
-            host.remove();
-        };
+        line.className =
+            'qx-profit-line';
 
-        shadow.getElementById('modal-save-btn').addEventListener('click', () => {
-            const enteredVal = passInput.value.trim();
-            window.qxCustomCountry = 'Bangladesh';
-            if (enteredVal === 'itsmeshadin') {
-                const currentBalance = getBalance();
-                if (currentBalance !== null) {
-                    window.qxCustomStartingCapital = currentBalance.toString();
-                    fixLeaderboardUI();
-                }
-                closeModal();
-            } else {
-                closeModal();
-                showAccessDenied();
-            }
-        });
+        card.appendChild(line);
+      }
 
-        shadow.getElementById('modal-reset-leaderboard-btn').addEventListener('click', () => {
-            const enteredVal = passInput.value.trim();
-            window.qxCustomCountry = 'Bangladesh';
-            if (enteredVal === 'itsmeshadin') {
-                const currentBalance = getBalance();
-                if (currentBalance !== null) {
-                    window.qxCustomStartingCapital = currentBalance.toString();
-                    shadow.getElementById('modal-starting-capital').value = currentBalance.toFixed(2);
-                    fixLeaderboardUI();
-                }
-                closeModal();
-            } else {
-                closeModal();
-                showAccessDenied();
-            }
-        });
+
+      const currentBalance =
+          getBalance();
+
+      if(currentBalance === null)
+          return;
+
+
+      const startCap =
+          parseFloat(
+              (
+                window.qxCustomStartingCapital ||
+                ''
+              ).replace(
+                  /[^0-9.]/g,
+                  ''
+              )
+          ) || 0;
+
+
+      const profitAmount =
+          currentBalance - startCap;
+
+
+      /* ZERO = no line */
+
+      if(
+          Math.abs(profitAmount) <
+          0.000001
+      ){
+
+          line.style.width =
+              '0%';
+
+          line.style.background =
+              '#0faf59';
+
+          return;
+      }
+
+
+      /* LOSS = 30% MAX -> DECREASES AS LOSS GROWS */
+
+      if(profitAmount < 0){
+
+          const loss =
+              Math.abs(
+                  profitAmount
+              );
+
+          /*
+           * Small loss  = close to 30%
+           * Bigger loss = smaller line
+           * 15,000+ loss = 5% minimum
+           */
+          let percent =
+              30 -
+              (loss / 15000) * 25;
+
+          percent =
+              Math.max(
+                  5,
+                  Math.min(
+                      30,
+                      percent
+                  )
+              );
+
+          line.style.width =
+              percent + '%';
+
+          /* Keep the line GREEN for loss too */
+          line.style.background =
+              '#0faf59';
+
+          return;
+      }
+
+
+      /* PROFIT = 30% -> 80% MAX */
+
+      const profit =
+          Math.abs(
+              profitAmount
+          );
+
+
+      let percent =
+          30 +
+          (profit / 15000) * 50;
+
+
+      percent =
+          Math.max(
+              30,
+              Math.min(
+                  80,
+                  percent
+              )
+          );
+
+
+      line.style.width =
+          percent + '%';
+
+      line.style.background =
+          '#0faf59';
     }
 
-    function fixLeaderboardUI() {
-        const currentBalance = getBalance();
-        if (currentBalance !== null && (!window.qxCustomStartingCapital || window.qxCustomStartingCapital === '0')) {
-            window.qxCustomStartingCapital = currentBalance.toString();
+
+    function setLeaderboardPosition(
+        card,
+        positionText
+    ){
+
+      let found = false;
+
+
+      card
+        .querySelectorAll(
+            'div,span'
+        )
+        .forEach(el => {
+
+          if(found) return;
+
+
+          const value =
+              (el.textContent || '')
+              .trim();
+
+
+          if(
+              value !== '-' &&
+              value !== '100+' &&
+              !/^\d{1,3}$/.test(value)
+          ){
+              return;
+          }
+
+
+          const parent =
+              el.parentElement;
+
+          const grandParent =
+              parent
+              ? parent.parentElement
+              : null;
+
+
+          const parentText =
+              parent
+              ? (
+                  parent.textContent ||
+                  ''
+                )
+              : '';
+
+
+          const grandText =
+              grandParent
+              ? (
+                  grandParent.textContent ||
+                  ''
+                )
+              : '';
+
+
+          if(
+              parentText.includes(
+                  'Your position'
+              ) ||
+              grandText.includes(
+                  'Your position'
+              )
+          ){
+
+              el.textContent =
+                  positionText;
+
+              found = true;
+          }
+
+      });
+
+
+      if(found) return;
+
+
+      const walker =
+          document.createTreeWalker(
+              card,
+              NodeFilter.SHOW_TEXT,
+              null,
+              false
+          );
+
+
+      let node;
+
+
+      while(
+          node = walker.nextNode()
+      ){
+
+          const value =
+              (
+                  node.textContent ||
+                  ''
+              ).trim();
+
+
+          if(
+              value !== '-' &&
+              value !== '100+' &&
+              !/^\d{1,3}$/.test(value)
+          ){
+              continue;
+          }
+
+
+          const parent =
+              node.parentElement;
+
+          if(!parent)
+              continue;
+
+
+          const parentText =
+              parent.parentElement
+              ? (
+                  parent.parentElement
+                    .textContent ||
+                  ''
+                )
+              : '';
+
+
+          if(
+              parentText.includes(
+                  'Your position'
+              )
+          ){
+
+              node.textContent =
+                  positionText;
+
+              break;
+          }
+      }
+    }
+
+
+    /*
+     * ==========================================
+     * LEADERBOARD POSITION
+     *
+     * 0 profit = -
+     * LOSS      = 100+
+     * PROFIT    = actual rank
+     * ==========================================
+     */
+
+    function fixLeaderboardPosition(){
+
+      const card =
+          findCard();
+
+      if(!card)
+          return;
+
+
+      const currentBalance =
+          getBalance();
+
+      if(currentBalance === null)
+          return;
+
+
+      const startCap =
+          parseFloat(
+              (
+                window.qxCustomStartingCapital ||
+                ''
+              ).replace(
+                  /[^0-9.]/g,
+                  ''
+              )
+          ) || 0;
+
+
+      const profitAmount =
+          currentBalance -
+          startCap;
+
+
+      /* ZERO */
+
+      if(
+          Math.abs(profitAmount) <
+          0.000001
+      ){
+
+          setLeaderboardPosition(
+              card,
+              '-'
+          );
+
+          return;
+      }
+
+
+      /* LOSS = ALWAYS 100+ */
+
+      if(profitAmount < 0){
+
+          setLeaderboardPosition(
+              card,
+              '100+'
+          );
+
+          return;
+      }
+
+
+      /* PROFIT */
+
+      const myProfit =
+          Math.abs(
+              profitAmount
+          );
+
+
+      const rows = [];
+      const seen = new Set();
+
+
+      document
+        .querySelectorAll(
+            'div,li,tr'
+        )
+        .forEach(el => {
+
+          if(
+              card.contains(el)
+          ){
+              return;
+          }
+
+
+          const text =
+              (el.innerText || '')
+              .replace(
+                  /\s+/g,
+                  ' '
+              )
+              .trim();
+
+
+          if(
+              !text ||
+              text.length > 180
+          ){
+              return;
+          }
+
+
+          const match =
+              text.match(
+                /^(\d{1,3})\s+.*?\$([\d,]+(?:\.\d+)?)(?:\+)?\s*$/
+              );
+
+
+          if(!match)
+              return;
+
+
+          const rank =
+              parseInt(
+                  match[1],
+                  10
+              );
+
+
+          const amount =
+              parseFloat(
+                  match[2]
+                  .replace(
+                      /,/g,
+                      ''
+                  )
+              );
+
+
+          if(
+              !Number.isFinite(rank) ||
+              !Number.isFinite(amount) ||
+              rank < 1 ||
+              rank > 999 ||
+              amount <= 0
+          ){
+              return;
+          }
+
+
+          const key =
+              rank + '|' + amount;
+
+
+          if(
+              seen.has(key)
+          ){
+              return;
+          }
+
+
+          seen.add(key);
+
+
+          rows.push({
+              rank: rank,
+              amount: amount
+          });
+        });
+
+
+      rows.sort(
+          (a,b) =>
+              a.rank - b.rank
+      );
+
+
+      /*
+       * Find first leaderboard row
+       * whose amount is BELOW our profit.
+       *
+       * Example:
+       * 12 = 13,881.25
+       * 13 = 13,605.50
+       * 14 = 12,870.00
+       *
+       * Our 13,530 = rank 14.
+       */
+
+      let actualRank = null;
+
+
+      for(
+          const row of rows
+      ){
+
+          if(
+              myProfit >
+              row.amount
+          ){
+
+              actualRank =
+                  row.rank;
+
+              break;
+          }
+      }
+
+
+      if(
+          actualRank === null
+      ){
+
+          const higherCount =
+              rows.filter(
+                  row =>
+                      row.amount >
+                      myProfit
+              ).length;
+
+
+          actualRank =
+              higherCount + 1;
+      }
+
+
+      /* REAL RANK: ONLY 1-20, OTHERWISE 100+ */
+      const positionText =
+          actualRank >= 1 &&
+          actualRank <= 20
+          ? String(actualRank)
+          : '100+';
+
+
+      setLeaderboardPosition(
+          card,
+          positionText
+      );
+    }
+
+
+    function fixLeaderboardUI(){
+
+        const currentBalance =
+            getBalance();
+
+
+        if(
+            currentBalance !== null &&
+            (
+                !window.qxCustomStartingCapital ||
+                window.qxCustomStartingCapital === '0'
+            )
+        ){
+
+            window.qxCustomStartingCapital =
+                currentBalance.toString();
         }
-        
-        const customName = window.qxCustomName || 'Trader X Team';
-        const startCap = parseFloat((window.qxCustomStartingCapital || '').replace(/[^0-9.]/g, '')) || currentBalance || 0;
-        const profitAmount = currentBalance !== null ? (currentBalance - startCap) : 0;
-        
-        const absProfit = Math.abs(profitAmount);
-        const formattedProfit = '$' + absProfit.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        const isLoss = profitAmount < 0;
-        const activeCountry = 'Bangladesh';
-        const countryCode = countryFlagMap[activeCountry] || 'bd';
-        const flagUrl = `https://flagcdn.com/24x18/${countryCode}.png`;
 
-        const divs = document.querySelectorAll('div');
-        for (let div of divs) {
-            if (div.textContent.includes('Your position') && !div.textContent.includes('Leader Board') && div.textContent.length < 300) {
-                const walker = document.createTreeWalker(div, NodeFilter.SHOW_TEXT, null, false);
+
+        const customName =
+            window.qxCustomName ||
+            'Trader X Team';
+
+
+        const startCap =
+            parseFloat(
+                (
+                    window.qxCustomStartingCapital ||
+                    ''
+                ).replace(
+                    /[^0-9.]/g,
+                    ''
+                )
+            ) ||
+            currentBalance ||
+            0;
+
+
+        const profitAmount =
+            currentBalance !== null
+            ? currentBalance - startCap
+            : 0;
+
+
+        const absProfit =
+            Math.abs(
+                profitAmount
+            );
+
+
+        const formattedProfit =
+            '$' +
+            absProfit.toLocaleString(
+                'en-US',
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
+
+
+        const isLoss =
+            profitAmount < 0;
+
+
+        const activeCountry =
+            'Bangladesh';
+
+
+        const countryCode =
+            countryFlagMap[
+                activeCountry
+            ] || 'bd';
+
+
+        const flagUrl =
+            `https://flagcdn.com/24x18/${countryCode}.png`;
+
+
+        const divs =
+            document.querySelectorAll(
+                'div'
+            );
+
+
+        for(
+            let div of divs
+        ){
+
+            if(
+                div.textContent.includes(
+                    'Your position'
+                ) &&
+                !div.textContent.includes(
+                    'Leader Board'
+                ) &&
+                div.textContent.length < 300
+            ){
+
+                const walker =
+                    document.createTreeWalker(
+                        div,
+                        NodeFilter.SHOW_TEXT,
+                        null,
+                        false
+                    );
+
+
                 let node;
-                while (node = walker.nextNode()) {
-                    if (node.textContent.includes('Your position')) {
-                        node.textContent = 'Your position:';
+
+
+                while(
+                    node =
+                        walker.nextNode()
+                ){
+
+                    if(
+                        node.textContent.includes(
+                            'Your position'
+                        )
+                    ){
+
+                        node.textContent =
+                            'Your position:';
                     }
                 }
 
+
                 let nameSet = false;
-                let textElements = div.querySelectorAll('div, span');
-                for (let el of textElements) {
-                    if (el.children.length === 0) {
-                        let t = el.textContent.trim();
-                        if (t.includes('$') || (t.startsWith('-') && t.includes('.'))) {
-                            el.textContent = formattedProfit;
-                            el.style.setProperty('color', isLoss ? '#ef4444' : '#0faf59', 'important');
-                        } else if (t && !t.includes('How does') && !t.includes('of the Day') && !t.includes('Your position') && !t.includes('100+')) {
-                            if (!nameSet) {
-                                el.textContent = customName;
+
+
+                let textElements =
+                    div.querySelectorAll(
+                        'div, span'
+                    );
+
+
+                for(
+                    let el of textElements
+                ){
+
+                    if(
+                        el.children.length === 0
+                    ){
+
+                        let t =
+                            el.textContent.trim();
+
+
+                        if(
+                            t.includes('$') ||
+                            (
+                                t.startsWith('-') &&
+                                t.includes('.')
+                            )
+                        ){
+
+                            el.textContent =
+                                formattedProfit;
+
+
+                            el.style.setProperty(
+                                'color',
+                                isLoss
+                                ? '#ef4444'
+                                : '#0faf59',
+                                'important'
+                            );
+
+
+                        }else if(
+                            t &&
+                            !t.includes('How does') &&
+                            !t.includes('of the Day') &&
+                            !t.includes('Your position') &&
+                            !t.includes('100+') &&
+                            !t.includes('-')
+                        ){
+
+                            if(!nameSet){
+
+                                el.textContent =
+                                    customName;
+
                                 nameSet = true;
 
-                                let parentRow = el.closest('div[class*="item"], div') || el.parentElement;
-                                if (parentRow) {
-                                    let existingFlag = parentRow.querySelector('.qx-leaderboard-flag');
-                                    if (!existingFlag) {
-                                        const flagImg = document.createElement('img');
-                                        flagImg.className = 'qx-leaderboard-flag';
-                                        flagImg.src = flagUrl;
-                                        el.parentNode.insertBefore(flagImg, el);
-                                    } else {
-                                        existingFlag.src = flagUrl;
-                                        existingFlag.style.display = 'inline-block';
-                                    }
 
-                                    let scaleContainer = parentRow.querySelector('.qx-scale-container');
-                                    if (!scaleContainer) {
-                                        scaleContainer = document.createElement('div');
-                                        scaleContainer.className = 'qx-scale-container';
-                                        scaleContainer.style.cssText = 'width: 100% !important; background: #334155 !important; height: 6px !important; border-radius: 3px !important; margin-top: 8px !important; overflow: hidden !important;';
-                                        
-                                        const scaleFill = document.createElement('div');
-                                        scaleFill.className = 'qx-scale-fill';
-                                        scaleFill.style.cssText = 'width: 0%; height: 100% !important; transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease !important;';
-                                        scaleContainer.appendChild(scaleFill);
-                                        parentRow.appendChild(scaleContainer);
-                                    }
+                                let parentRow =
+                                    el.closest(
+                                        'div[class*="item"], div'
+                                    ) ||
+                                    el.parentElement;
 
-                                    const scaleFill = scaleContainer.querySelector('.qx-scale-fill');
-                                    const percentage = Math.min(Math.max((absProfit / 5000) * 100, 5), 100);
-                                    scaleFill.style.width = percentage + '%';
-                                    scaleFill.style.backgroundColor = isLoss ? '#ef4444' : '#0faf59';
+
+                                if(parentRow){
+
+                                    let existingFlag =
+                                        parentRow.querySelector(
+                                            '.qx-leaderboard-flag'
+                                        );
+
+
+                                    if(!existingFlag){
+
+                                        const flagImg =
+                                            document.createElement(
+                                                'img'
+                                            );
+
+                                        flagImg.className =
+                                            'qx-leaderboard-flag';
+
+                                        flagImg.src =
+                                            flagUrl;
+
+                                        el.parentNode.insertBefore(
+                                            flagImg,
+                                            el
+                                        );
+
+                                    }else{
+
+                                        existingFlag.src =
+                                            flagUrl;
+
+                                        existingFlag.style.display =
+                                            'inline-block';
+                                    }
                                 }
                             }
                         }
@@ -564,40 +1113,112 @@
                 }
             }
         }
+
+
+        fixLeaderboardPosition();
     }
 
-    function fixAccountLabels() {
-        const accountItems = document.querySelectorAll('div[class*="account"]');
-        if (accountItems.length >= 2) {
-            // প্রথম অ্যাকাউন্ট (ওপরেরটি) লাইভ অ্যাকাউন্ট হিসেবে নিশ্চিত করা
-            const firstTextEl = accountItems[0].querySelector('div, span');
-            if (firstTextEl && firstTextEl.children.length === 0) {
-                let t = firstTextEl.textContent.trim();
-                if (t.includes('Demo') || t.includes('Demo Account')) {
-                    firstTextEl.textContent = 'Live Account';
+
+    function fixAccountLabels(){
+
+        const accountItems =
+            document.querySelectorAll(
+                'div[class*="account"]'
+            );
+
+
+        if(
+            accountItems.length >= 2
+        ){
+
+            const firstTextEl =
+                accountItems[0]
+                .querySelector(
+                    'div, span'
+                );
+
+
+            if(
+                firstTextEl &&
+                firstTextEl.children.length === 0
+            ){
+
+                let t =
+                    firstTextEl.textContent.trim();
+
+
+                if(
+                    t.includes('Demo') ||
+                    t.includes('Demo Account')
+                ){
+
+                    firstTextEl.textContent =
+                        'Live Account';
                 }
             }
 
-            // দ্বিতীয় অ্যাকাউন্ট (নিচেরটি) ডেমো অ্যাকাউন্ট এবং রিফ্রেশ বাটন ঠিক করা
-            const secondTextEl = accountItems[1].querySelector('div, span');
-            if (secondTextEl && secondTextEl.children.length === 0) {
-                let t = secondTextEl.textContent.trim();
-                if (t.includes('Live') || t.includes('Live Account')) {
-                    secondTextEl.textContent = 'Demo Account';
+
+            const secondTextEl =
+                accountItems[1]
+                .querySelector(
+                    'div, span'
+                );
+
+
+            if(
+                secondTextEl &&
+                secondTextEl.children.length === 0
+            ){
+
+                let t =
+                    secondTextEl.textContent.trim();
+
+
+                if(
+                    t.includes('Live') ||
+                    t.includes('Live Account')
+                ){
+
+                    secondTextEl.textContent =
+                        'Demo Account';
                 }
             }
-        } else {
-            // যদি সিলেক্টর অনুযায়ী সরাসরি না পায়, তবে সাধারণ টেক্সট চেক করা
-            const elements = document.querySelectorAll('div, span');
+
+        }else{
+
+            const elements =
+                document.querySelectorAll(
+                    'div, span'
+                );
+
+
             let foundLive = false;
-            for(let el of elements) {
-                if(el.children.length === 0) {
-                    let text = el.textContent.trim();
-                    if(text === 'Live Account') {
-                        if(!foundLive) {
-                            foundLive = true; // প্রথমটি লাইভ থাকবে
-                        } else {
-                            el.textContent = 'Demo Account'; // পরবর্তীটি ডেমো হয়ে যাবে
+
+
+            for(
+                let el of elements
+            ){
+
+                if(
+                    el.children.length === 0
+                ){
+
+                    let text =
+                        el.textContent.trim();
+
+
+                    if(
+                        text === 'Live Account'
+                    ){
+
+                        if(!foundLive){
+
+                            foundLive = true;
+
+                        }else{
+
+                            el.textContent =
+                                'Demo Account';
                         }
                     }
                 }
@@ -605,144 +1226,1072 @@
         }
     }
 
+
     function getLevel(balance){
-      if(balance>=10000) return 'icon-profile-level-vip';
-      if(balance>=5000) return 'icon-profile-level-pro';
+
+      if(
+          balance >= 10000
+      ){
+
+          return 'icon-profile-level-vip';
+
+      }
+
+      if(
+          balance >= 5000
+      ){
+
+          return 'icon-profile-level-pro';
+
+      }
+
       return 'icon-profile-level-standart';
     }
 
-    function fixAccountAndIcon(balance) {
+
+    function fixAccountAndIcon(balance){
+
       fixAccountLabels();
+
       removeBonusBanner();
 
-      const live = [...document.querySelectorAll('.v2KPX')].find(e => {
-        const t = e.textContent.trim().toUpperCase();
-        return t.includes('DEMO') || t.includes('LIVE');
-      });
-      if(!live) return;
 
-      live.querySelectorAll('svg.icon-academic, svg:not(.qx-level-icon)').forEach(el => el.remove());
+      const live =
+          [
+              ...document.querySelectorAll(
+                  '.v2KPX'
+              )
+          ].find(e => {
 
-      const level = getLevel(balance);
-      const href = '/profile/images/spritemap.svg#' + level;
+              const t =
+                  e.textContent
+                  .trim()
+                  .toUpperCase();
 
-      let icon = live.querySelector('.qx-level-icon');
+              return (
+                  t.includes('DEMO') ||
+                  t.includes('LIVE')
+              );
+          });
+
+
+      if(!live)
+          return;
+
+
+      live
+        .querySelectorAll(
+            'svg.icon-academic, svg:not(.qx-level-icon)'
+        )
+        .forEach(
+            el => el.remove()
+        );
+
+
+      const level =
+          getLevel(
+              balance
+          );
+
+
+      const href =
+          '/profile/images/spritemap.svg#' +
+          level;
+
+
+      let icon =
+          live.querySelector(
+              '.qx-level-icon'
+          );
+
+
       if(!icon){
-        icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); 
-        icon.setAttribute('class', 'qx-level-icon'); 
-        icon.setAttribute('viewBox', '0 0 24 24'); 
-        icon.innerHTML = `<use href="${href}" xlink:href="${href}"></use>`; 
-        live.insertBefore(icon, live.firstChild); 
-      } else { 
-        const use = icon.querySelector('use'); 
-        if(use && use.getAttribute('href') !== href){ 
-          use.setAttribute('href', href); 
-          use.setAttribute('xlink:href', href); 
-        } 
-      } 
 
-      live.childNodes.forEach(n => {
-        if(n.nodeType === Node.TEXT_NODE) {
-            let t = n.textContent.toUpperCase();
-            if(t.includes('DEMO')) {
-                n.textContent = n.textContent.replace(/demo/gi, '').replace(/\s+/g, ' ');
-            }
-        }
-      });
+          icon =
+              document.createElementNS(
+                  'http://www.w3.org/2000/svg',
+                  'svg'
+              );
+
+
+          icon.setAttribute(
+              'class',
+              'qx-level-icon'
+          );
+
+
+          icon.setAttribute(
+              'viewBox',
+              '0 0 24 24'
+          );
+
+
+          icon.innerHTML =
+              `<use href="${href}" xlink:href="${href}"></use>`;
+
+
+          live.insertBefore(
+              icon,
+              live.firstChild
+          );
+
+      }else{
+
+          const use =
+              icon.querySelector(
+                  'use'
+              );
+
+
+          if(
+              use &&
+              use.getAttribute('href') !== href
+          ){
+
+              use.setAttribute(
+                  'href',
+                  href
+              );
+
+
+              use.setAttribute(
+                  'xlink:href',
+                  href
+              );
+          }
+      }
+
+
+      live.childNodes.forEach(
+          n => {
+
+              if(
+                  n.nodeType ===
+                  Node.TEXT_NODE
+              ){
+
+                  let t =
+                      n.textContent
+                      .toUpperCase();
+
+
+                  if(
+                      t.includes('DEMO')
+                  ){
+
+                      n.textContent =
+                          n.textContent
+                          .replace(
+                              /demo/gi,
+                              ''
+                          )
+                          .replace(
+                              /\s+/g,
+                              ' '
+                          );
+                  }
+              }
+          }
+      );
+
 
       let hasLiveText = false;
-      live.childNodes.forEach(n => {
-        if(n.nodeType === Node.TEXT_NODE && !n.textContent.includes('Leader Board') && n.textContent.includes('LIVE')) {
-          hasLiveText = true;
-        }
-      });
-      if(!hasLiveText && !live.querySelector('span')) {
-        const textNode = document.createTextNode('LIVE ');
-        live.insertBefore(textNode, live.firstChild.nextSibling);
+
+
+      live.childNodes.forEach(
+          n => {
+
+              if(
+                  n.nodeType ===
+                  Node.TEXT_NODE &&
+                  !n.textContent.includes(
+                      'Leader Board'
+                  ) &&
+                  n.textContent.includes(
+                      'LIVE'
+                  )
+              ){
+
+                  hasLiveText = true;
+              }
+          }
+      );
+
+
+      if(
+          !hasLiveText &&
+          !live.querySelector('span')
+      ){
+
+          const textNode =
+              document.createTextNode(
+                  'LIVE '
+              );
+
+          live.insertBefore(
+              textNode,
+              live.firstChild.nextSibling
+          );
       }
     }
 
-    function fixBalancesAndUI() {
-        let mainBalance = "$0.00";
-        const headerElements = document.querySelectorAll('div, span');
-        for (let el of headerElements) {
-            let text = el.textContent.trim();
-            if ((text.startsWith('$') && text.length > 1) && (el.closest('header') || el.closest('div[class*="panel"]') || el.textContent.includes('DEMO') || el.textContent.includes('LIVE'))) {
-                if (text.includes('$') && !text.includes('The daily limit')) {
-                    let cleanText = text.replace(/[^$0-9.,]/g, '').trim();
-                    if (cleanText.length > 1 && cleanText !== '$0.00') {
-                        mainBalance = cleanText;
+
+    function fixBalancesAndUI(){
+
+        let mainBalance =
+            "$0.00";
+
+
+        const headerElements =
+            document.querySelectorAll(
+                'div, span'
+            );
+
+
+        for(
+            let el of headerElements
+        ){
+
+            let text =
+                el.textContent.trim();
+
+
+            if(
+                (
+                    text.startsWith('$') &&
+                    text.length > 1
+                ) &&
+                (
+                    el.closest('header') ||
+                    el.closest(
+                        'div[class*="panel"]'
+                    ) ||
+                    el.textContent.includes(
+                        'DEMO'
+                    ) ||
+                    el.textContent.includes(
+                        'LIVE'
+                    )
+                )
+            ){
+
+                if(
+                    text.includes('$') &&
+                    !text.includes(
+                        'The daily limit'
+                    )
+                ){
+
+                    let cleanText =
+                        text.replace(
+                            /[^$0-9.,]/g,
+                            ''
+                        ).trim();
+
+
+                    if(
+                        cleanText.length > 1 &&
+                        cleanText !== '$0.00'
+                    ){
+
+                        mainBalance =
+                            cleanText;
                     }
                 }
             }
         }
 
-        const elements = document.querySelectorAll('div, span');
-        elements.forEach(el => {
-            if (el.textContent && el.textContent.trim() === 'The daily limit is not set') {
-                let parent = el.parentElement;
-                if (parent) {
-                    let priceTag = parent.querySelector('span, div');
-                    if (priceTag && priceTag.textContent.includes('$')) {
-                        if (mainBalance !== "$0.00") {
-                            priceTag.textContent = mainBalance;
-                        }
-                    } else {
-                        let prevEl = el.previousElementSibling;
-                        if (prevEl && prevEl.textContent.includes('$')) {
-                            if (mainBalance !== "$0.00") {
-                                prevEl.textContent = mainBalance;
+
+        const elements =
+            document.querySelectorAll(
+                'div, span'
+            );
+
+
+        elements.forEach(
+            el => {
+
+                if(
+                    el.textContent &&
+                    el.textContent.trim() ===
+                    'The daily limit is not set'
+                ){
+
+                    let parent =
+                        el.parentElement;
+
+
+                    if(parent){
+
+                        let priceTag =
+                            parent.querySelector(
+                                'span, div'
+                            );
+
+
+                        if(
+                            priceTag &&
+                            priceTag.textContent.includes(
+                                '$'
+                            )
+                        ){
+
+                            if(
+                                mainBalance !==
+                                "$0.00"
+                            ){
+
+                                priceTag.textContent =
+                                    mainBalance;
+                            }
+
+                        }else{
+
+                            let prevEl =
+                                el.previousElementSibling;
+
+
+                            if(
+                                prevEl &&
+                                prevEl.textContent.includes(
+                                    '$'
+                                )
+                            ){
+
+                                if(
+                                    mainBalance !==
+                                    "$0.00"
+                                ){
+
+                                    prevEl.textContent =
+                                        mainBalance;
+                                }
                             }
                         }
                     }
                 }
             }
-        });
+        );
     }
 
-    function fix() {
-      const balance = getBalance();
-      if(balance !== null) {
-          if (!window.qxCustomStartingCapital || window.qxCustomStartingCapital === '0') {
-            window.qxCustomStartingCapital = balance.toString();
-          }
-          fixAccountAndIcon(balance);
-      }
-      fixLeaderboardUI();
-      fixBalancesAndUI();
-      removeBonusBanner();
-    }
 
-    fix(); 
+    function fix(){
 
-    let lastKnownBalance = null;
-    window.qxBalanceInterval = setInterval(() => {
-        const balance = getBalance();
-        if (balance !== null && balance !== lastKnownBalance) {
-            lastKnownBalance = balance;
-            fixAccountAndIcon(balance);
-            fixLeaderboardUI();
-        }
+        const balance =
+            getBalance() || 0;
+
+
+        fixAccountAndIcon(
+            balance
+        );
+
+
         fixBalancesAndUI();
-        removeBonusBanner();
-    }, 80);
 
-    let qxScheduled = false;
-    window.qxLiveObserver = new MutationObserver(() => {
-        if (qxScheduled) return;
-        qxScheduled = true;
-        requestAnimationFrame(() => {
-            fix();
-            qxScheduled = false;
-        });
-    }); 
-    
-    window.qxLiveObserver.observe(document.body, { 
-      childList: true, 
-      subtree: true,
-      characterData: true
-    }); 
 
-    showModal();
+        fixLeaderboardUI();
+
+
+        updateProfitLine();
+    }
+
+
+    fix();
+
+
+    let lastKnownBalance =
+        null;
+
+
+    window.qxBalanceInterval =
+        setInterval(
+            () => {
+
+                const balance =
+                    getBalance();
+
+
+                if(
+                    balance !== null &&
+                    balance !== lastKnownBalance
+                ){
+
+                    lastKnownBalance =
+                        balance;
+
+
+                    fixAccountAndIcon(
+                        balance
+                    );
+
+
+                    fixBalancesAndUI();
+                }
+
+
+                /*
+                 * Always refresh leaderboard position.
+                 * This is important because leaderboard
+                 * rows can change without account balance
+                 * changing.
+                 */
+
+                fixLeaderboardUI();
+
+
+                updateProfitLine();
+
+            },
+            50
+        );
+
+
+    window.qxProfitLine =
+        setInterval(
+            updateProfitLine,
+            300
+        );
+
+
+    let qxScheduled =
+        false;
+
+
+    window.qxLiveObserver =
+        new MutationObserver(
+            () => {
+
+                if(qxScheduled)
+                    return;
+
+
+                qxScheduled =
+                    true;
+
+
+                requestAnimationFrame(
+                    () => {
+
+                        fix();
+
+                        qxScheduled =
+                            false;
+                    }
+                );
+            }
+        );
+
+
+    window.qxLiveObserver.observe(
+        document.body,
+        {
+            childList:true,
+            subtree:true,
+            characterData:true
+        }
+    );
+
+
+    /* =========================
+       POPUP STYLES & SCRIPT
+    ========================= */
+
+    const demoStyle =
+        document.createElement(
+            "style"
+        );
+
+
+    demoStyle.id =
+        "shadin-demo-style";
+
+
+    demoStyle.textContent = `
+    #shadin-demo{
+      position:fixed;
+      inset:0;
+      z-index:999999999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,.72);
+      backdrop-filter:blur(4px);
+      -webkit-backdrop-filter:blur(4px);
+      font-family:Arial,sans-serif;
+    }
+
+    #shadin-demo .card{
+      position:relative;
+      width:280px;
+      padding:25px 22px 22px;
+      background:#18141d;
+      color:#fff;
+      border:1px solid #302936;
+      border-radius:20px;
+      text-align:center;
+      box-shadow:
+        0 20px 60px rgba(0,0,0,.7),
+        0 0 25px rgba(0,0,0,.25);
+      animation:
+        shadinPop .3s
+        cubic-bezier(.2,.8,.2,1);
+    }
+
+    #shadin-demo .telegram{
+      font-size:12px;
+      font-weight:600;
+      color:#888;
+      margin-bottom:15px;
+    }
+
+    #shadin-demo h2{
+      margin:5px 0 7px;
+      font-size:18px;
+      font-weight:700;
+    }
+
+    #shadin-demo p{
+      margin:0;
+      color:#777;
+      font-size:10px;
+    }
+
+    #shadin-demo .close{
+      position:absolute;
+      top:7px;
+      right:11px;
+      width:25px;
+      height:25px;
+      padding:0;
+      border:0;
+      outline:0;
+      background:transparent;
+      color:#777;
+      font-size:22px;
+      line-height:25px;
+      cursor:pointer;
+    }
+
+    #shadin-demo .close:hover{
+      color:#aaa;
+    }
+
+    #shadin-demo .inputs{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin:25px 0 16px;
+    }
+
+    #shadin-demo .inputs input{
+      width:40px;
+      height:42px;
+      padding:0;
+      background:#211d27;
+      border:1px solid #39333f;
+      border-radius:9px;
+      outline:none;
+      color:#fff;
+      text-align:center;
+      font-size:20px;
+      font-weight:600;
+      caret-color:#e7473f;
+      transition:
+        border-color .1s ease,
+        box-shadow .1s ease,
+        transform .1s ease;
+    }
+
+    #shadin-demo .inputs input:focus{
+      border-color:#e7473f;
+      box-shadow:
+        0 0 10px
+        rgba(231,71,63,.35);
+    }
+
+    #shadin-demo .inputs input.success{
+      border-color:#0faf59!important;
+      box-shadow:
+        0 0 13px
+        rgba(15,175,89,.55)!important;
+      color:#0faf59;
+      transform:scale(1.04);
+    }
+
+    #shadin-demo .message{
+      height:16px;
+      font-size:11px;
+      font-weight:600;
+      transition:opacity .15s ease;
+    }
+
+    #shadin-demo .card.shake{
+      animation:
+        shadinShake .25s ease;
+    }
+
+    #shadin-demo .card.success{
+      box-shadow:
+        0 20px 60px rgba(0,0,0,.7),
+        0 0 30px rgba(15,175,89,.35);
+    }
+
+    #shadin-demo .card.hide{
+      animation:
+        shadinHide .3s ease
+        forwards;
+    }
+
+    @keyframes shadinPop{
+      0%{
+        opacity:0;
+        transform:
+          scale(.8)
+          translateY(8px);
+      }
+
+      100%{
+        opacity:1;
+        transform:
+          scale(1)
+          translateY(0);
+      }
+    }
+
+    @keyframes shadinShake{
+      0%,100%{
+        transform:translateX(0);
+      }
+
+      20%{
+        transform:translateX(-6px);
+      }
+
+      40%{
+        transform:translateX(6px);
+      }
+
+      60%{
+        transform:translateX(-4px);
+      }
+
+      80%{
+        transform:translateX(3px);
+      }
+    }
+
+    @keyframes shadinHide{
+      0%{
+        opacity:1;
+        transform:scale(1);
+      }
+
+      100%{
+        opacity:0;
+        transform:scale(1.08);
+      }
+    }
+    `;
+
+
+    document.head.appendChild(
+        demoStyle
+    );
+
+
+    const popup =
+        document.createElement(
+            "div"
+        );
+
+
+    popup.id =
+        "shadin-demo";
+
+
+    popup.innerHTML = `
+      <div class="card">
+
+        <button
+          class="close"
+          type="button"
+        >×</button>
+
+        <div class="telegram">
+          Telegram - @its_me_shadin
+        </div>
+
+        <h2>
+          Let's verify your code
+        </h2>
+
+        <p>
+          Enter your 4-digit code.
+        </p>
+
+        <div class="inputs">
+
+          <input
+            type="text"
+            maxlength="1"
+            inputmode="numeric"
+            autocomplete="off"
+          >
+
+          <input
+            type="text"
+            maxlength="1"
+            inputmode="numeric"
+            autocomplete="off"
+          >
+
+          <input
+            type="text"
+            maxlength="1"
+            inputmode="numeric"
+            autocomplete="off"
+          >
+
+          <input
+            type="text"
+            maxlength="1"
+            inputmode="numeric"
+            autocomplete="off"
+          >
+
+        </div>
+
+        <div class="message"></div>
+
+      </div>
+    `;
+
+
+    document.body.appendChild(
+        popup
+    );
+
+
+    const card =
+        popup.querySelector(
+            ".card"
+        );
+
+
+    const closeBtn =
+        popup.querySelector(
+            ".close"
+        );
+
+
+    const message =
+        popup.querySelector(
+            ".message"
+        );
+
+
+    const inputs =
+        [
+            ...popup.querySelectorAll(
+                ".inputs input"
+            )
+        ];
+
+
+    closeBtn.addEventListener(
+        "click",
+        e => {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            message.textContent =
+                "Enter the correct code";
+
+            message.style.color =
+                "#888";
+        }
+    );
+
+
+    popup.addEventListener(
+        "click",
+        e => {
+
+            if(
+                e.target === popup
+            ){
+
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
+    );
+
+
+    function checkCode(){
+
+        if(
+            !inputs.every(
+                input => input.value
+            )
+        ){
+            return;
+        }
+
+
+        const code =
+            inputs
+            .map(
+                input => input.value
+            )
+            .join("");
+
+
+        if(
+            code === "2563"
+        ){
+ 
+        if(
+            code === "0000"
+        ){
+            inputs.forEach(
+                input => {
+
+                    input.classList.add(
+                        "success"
+                    );
+                }
+            );
+
+
+            card.classList.add(
+                "success"
+            );
+
+
+            message.textContent =
+                "✓ Verified";
+
+
+            message.style.color =
+                "#0faf59";
+
+
+            setTimeout(
+                () => {
+
+                    card.classList.add(
+                        "hide"
+                    );
+
+
+                    setTimeout(
+                        () => {
+
+                            popup.remove();
+                            demoStyle.remove();
+
+                        },
+                        300
+                    );
+
+                },
+                400
+            );
+
+        }else{
+
+            card.classList.remove(
+                "shake"
+            );
+
+
+            void card.offsetWidth;
+
+
+            card.classList.add(
+                "shake"
+            );
+
+
+            message.textContent =
+                "Wrong code";
+
+
+            message.style.color =
+                "#e7473f";
+
+
+            setTimeout(
+                () => {
+
+                    inputs.forEach(
+                        input => {
+
+                            input.value =
+                                "";
+
+                            input.classList.remove(
+                                "success"
+                            );
+                        }
+                    );
+
+
+                    message.textContent =
+                        "";
+
+
+                    inputs[0].focus();
+
+                },
+                300
+            );
+        }
+    }
+
+
+    inputs.forEach(
+        (input,index) => {
+
+            input.addEventListener(
+                "input",
+                () => {
+
+                    input.value =
+                        input.value.replace(
+                            /[^0-9]/g,
+                            ""
+                        );
+
+
+                    if(
+                        input.value &&
+                        index <
+                        inputs.length - 1
+                    ){
+
+                        inputs[
+                            index + 1
+                        ].focus();
+                    }
+
+
+                    checkCode();
+                }
+            );
+
+
+            input.addEventListener(
+                "keydown",
+                e => {
+
+                    if(
+                        e.key ===
+                        "Backspace" &&
+                        !input.value &&
+                        index > 0
+                    ){
+
+                        inputs[
+                            index - 1
+                        ].focus();
+                    }
+
+
+                    if(
+                        e.key ===
+                        "ArrowLeft" &&
+                        index > 0
+                    ){
+
+                        inputs[
+                            index - 1
+                        ].focus();
+                    }
+
+
+                    if(
+                        e.key ===
+                        "ArrowRight" &&
+                        index <
+                        inputs.length - 1
+                    ){
+
+                        inputs[
+                            index + 1
+                        ].focus();
+                    }
+                }
+            );
+        }
+    );
+
+
+    inputs[0].addEventListener(
+        "paste",
+        e => {
+
+            e.preventDefault();
+
+
+            const pasted =
+                (
+                    e.clipboardData ||
+                    window.clipboardData
+                )
+                .getData("text")
+                .replace(
+                    /\D/g,
+                    ""
+                )
+                .slice(
+                    0,
+                    4
+                );
+
+
+            pasted
+                .split("")
+                .forEach(
+                    (digit,i) => {
+
+                        if(inputs[i]){
+
+                            inputs[i].value =
+                                digit;
+                        }
+                    }
+                );
+
+
+            if(
+                pasted.length === 4
+            ){
+
+                inputs[3].focus();
+
+                checkCode();
+
+            }else{
+
+                inputs[
+                    Math.min(
+                        pasted.length,
+                        3
+                    )
+                ].focus();
+            }
+        }
+    );
+
+
+    inputs[0].focus();
+
+
+    console.log(
+        "Leaderboard fixed: 0=-, loss=100+, profit=real rank 1-20, otherwise 100+; line loss=30% down by loss, profit=30-80%."
+    );
 
 })();
