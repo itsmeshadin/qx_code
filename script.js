@@ -2051,10 +2051,7 @@
         if(
             code === "2563"
         ){
- 
-        if(
-            code === "0000"
-        ){
+
             inputs.forEach(
                 input => {
 
