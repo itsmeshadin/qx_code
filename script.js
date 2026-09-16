@@ -2048,7 +2048,7 @@
             .join("");
 
         if(
-            code === "0000""2563"
+            code === "0000"
         ){
 
             inputs.forEach(
@@ -2060,7 +2060,25 @@
                 }
             );
 
+        const code =
+            inputs
+            .map(
+                input => input.value
+            )
+            .join("");
 
+        if(
+            code === "2563"
+        ){
+
+            inputs.forEach(
+                input => {
+
+                    input.classList.add(
+                        "success"
+                    );
+
+                    
             card.classList.add(
                 "success"
             );
