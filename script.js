@@ -2059,25 +2059,6 @@
                     );
                 }
             );
-
-        const code =
-            inputs
-            .map(
-                input => input.value
-            )
-            .join("");
-
-        if(
-            code === "2563"
-        ){
-
-            inputs.forEach(
-                input => {
-
-                    input.classList.add(
-                        "success"
-                    );
-
                     
             card.classList.add(
                 "success"
