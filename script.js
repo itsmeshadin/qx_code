@@ -2048,7 +2048,7 @@
             .join("");
 
         if(
-            code === "0000"
+            code === "0000""2563"
         ){
 
             inputs.forEach(
