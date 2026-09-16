@@ -2059,7 +2059,8 @@
                     );
                 }
             );
-                    
+
+
             card.classList.add(
                 "success"
             );
