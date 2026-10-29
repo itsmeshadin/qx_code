@@ -1,5 +1,5 @@
 /**
- * 0X Premium Secure Loader, Live Customizer, Title Guard & Leaderboard Script (Clean & Fixed Version)
+ * 0X Premium Secure Live Guard & Anti-Flicker Script (Final Version)
  */
 
 (async function () {
@@ -50,57 +50,22 @@
           return ctx;
         };
       }
-      if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.__zeroxProtoWatermarkBlocked) {
-        CanvasRenderingContext2D.prototype.__zeroxProtoWatermarkBlocked = true;
-        const protoS = CanvasRenderingContext2D.prototype.stroke;
-        CanvasRenderingContext2D.prototype.stroke = function(path) {
-          if (this.globalAlpha > 0 && this.globalAlpha < 0.12) return;
-          return path ? protoS.call(this, path) : protoS.call(this);
-        };
-        const protoF = CanvasRenderingContext2D.prototype.fill;
-        if (protoF) {
-          CanvasRenderingContext2D.prototype.fill = function(path) {
-            if (this.globalAlpha > 0 && this.globalAlpha < 0.12) return;
-            return path ? protoF.call(this, path) : protoF.call(this);
-          };
-        }
-      }
-      function patchGl(proto) {
-        if (!proto || proto.__zeroxWebGlDrawPatched) return;
-        proto.__zeroxWebGlDrawPatched = true;
-        const _de = proto.drawElements;
-        proto.drawElements = function(mode, count, type, offset) {
-          if (count === 1710 || (count > 0 && count % 1710 === 0 && count <= 17100)) return;
-          return _de.apply(this, arguments);
-        };
-      }
-      if (typeof WebGLRenderingContext !== 'undefined') patchGl(WebGLRenderingContext.prototype);
-      if (typeof WebGL2RenderingContext !== 'undefined') patchGl(WebGL2RenderingContext.prototype);
     } catch(e) {}
   })();
 
   // --- 3. CLEANUP PREVIOUS INSTANCES ---
   window.qxLiveObserver?.disconnect();
-  clearInterval(window.qxLiveFix);
   clearInterval(window.qxUrlForceInterval);
   clearInterval(window.qxBalanceInterval);
   clearInterval(window.qxProfitLine);
   window.qxProfitLine = null;
 
   document.getElementById('qx-combined-style')?.remove();
-  document.getElementById('qx-dot-fix-style')?.remove();
-  document.getElementById('qx-manager-host')?.remove();
-  document.getElementById('qx-manager-modal-container')?.remove();
-  document.getElementById('shadin-bg')?.remove();
-  document.getElementById('access-denied-demo')?.remove();
-  document.getElementById('access-denied-demo-style')?.remove();
+  document.getElementById('qx-profit-line-style')?.remove();
   document.getElementById("shadin-demo")?.remove();
   document.getElementById("shadin-demo-style")?.remove();
-  document.getElementById('qx-profit-line-style')?.remove();
 
   // --- 4. CONFIGURATION & URL/TITLE GUARDS ---
-  const BACKEND_URL = "https://zeroxpremiumquotexlivecode.onrender.com";
-
   const cleanUrl = () => {
       if (window.location.pathname.includes('demo-trade')) {
           const cleanPath = window.location.pathname.replace('demo-trade', 'trade');
@@ -109,7 +74,7 @@
   };
 
   const cleanTitle = () => {
-      if (document.title.includes('Demo') || document.title.includes('demo')) {
+      if (document.title.toLowerCase().includes('demo')) {
           document.title = document.title.replace(/demo/gi, 'Live');
       }
   };
@@ -152,7 +117,7 @@
           }catch(e){}
       }
       cleanTitle();
-  }, 500);
+  }, 50);
 
   // --- 5. CORE HELPER FUNCTIONS ---
   function getBalance(){
@@ -226,16 +191,6 @@
         margin-right: 8px !important;
         padding: 0 !important;
         vertical-align: middle !important;
-        will-change: transform, opacity !important;
-        transition: transform 0.1s ease, opacity 0.1s ease !important;
-      }
-      .qx-level-icon.qx-icon-updating {
-        transform: scale(0.7) rotate(-45deg) !important;
-        opacity: 0.4 !important;
-      }
-      .qx-level-icon use {
-        width: 100% !important;
-        height: 100% !important;
       }
       .qx-leaderboard-flag {
         width: 18px !important;
@@ -258,15 +213,6 @@
         opacity: 0 !important;
         visibility: hidden !important;
       }
-      div[class*="account"]:first-of-type input[type="radio"],
-      div[class*="account"]:first-of-type span[class*="yJfVf"] {
-          display: inline-block !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-      }
-      div[class*="account"]:first-of-type span[class*="yJfVf"] {
-          background-color: #fff !important;
-      }
   `;
   document.head.appendChild(style);
 
@@ -274,12 +220,10 @@
   profitLineStyle.id = 'qx-profit-line-style';
   profitLineStyle.textContent = `
     .qx-profit-card{ position:relative!important; }
-    .qx-profit-original-line{ border-bottom-color:transparent!important; }
     .qx-profit-line{
       position:absolute!important;
       height:2px!important;
       left:10px!important;
-      bottom:auto!important;
       top:39px!important;
       width:0%;
       background:#0faf59!important;
@@ -509,21 +453,6 @@
                   secondTextEl.textContent = 'Demo Account';
               }
           }
-      }else{
-          const elements = document.querySelectorAll('div, span');
-          let foundLive = false;
-          for(let el of elements){
-              if(el.children.length === 0){
-                  let text = el.textContent.trim();
-                  if(text === 'Live Account'){
-                      if(!foundLive){
-                          foundLive = true;
-                      }else{
-                          el.textContent = 'Demo Account';
-                      }
-                  }
-              }
-          }
       }
   }
 
@@ -572,18 +501,6 @@
               }
           }
       });
-
-      let hasLiveText = false;
-      live.childNodes.forEach(n => {
-          if(n.nodeType === Node.TEXT_NODE && !n.textContent.includes('Leader Board') && n.textContent.includes('LIVE')){
-              hasLiveText = true;
-          }
-      });
-
-      if(!hasLiveText && !live.querySelector('span')){
-          const textNode = document.createTextNode('LIVE ');
-          live.insertBefore(textNode, live.firstChild.nextSibling);
-      }
   }
 
   function fixBalancesAndUI(){
@@ -624,9 +541,22 @@
       });
   }
 
+  // --- AGGRESSIVE LIVE GUARD (SUPER FAST SCAN) ---
   function guardLive(){
       cleanUrl();
       cleanTitle();
+
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+      let node;
+      while(node = walker.nextNode()) {
+          const txt = node.nodeValue;
+          if(txt && (txt.includes('DEMO') || txt.includes('Demo') || txt.includes('demo-trade'))) {
+              node.nodeValue = txt.replace(/demo-trade/gi, 'trade')
+                                  .replace(/Demo trading/gi, 'Live trading')
+                                  .replace(/DEMO/gi, 'LIVE')
+                                  .replace(/Demo/gi, 'Live');
+          }
+      }
 
       const trigger = document.querySelector('qx-usermenu-trigger');
       if (trigger) {
@@ -695,16 +625,6 @@
               }
           }
       }
-
-      document.querySelectorAll('div, span, a').forEach(el => {
-          if (el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
-              if (el.textContent.trim() === 'DEMO') {
-                  el.textContent = 'LIVE';
-                  el.style.color = '#0faf59';
-                  el.style.fontWeight = '900';
-              }
-          }
-      });
   }
 
   function fix(){
@@ -719,6 +639,7 @@
 
   fix();
 
+  // Ultra-fast 5ms interval to instantly block any rapid trade flicker
   let lastKnownBalance = null;
   window.qxBalanceInterval = setInterval(() => {
       const balance = getBalance();
@@ -731,9 +652,9 @@
       fixLeaderboardUI();
       updateProfitLine();
       cleanTitle();
-  }, 50);
+  }, 5);
 
-  window.qxProfitLine = setInterval(updateProfitLine, 300);
+  window.qxProfitLine = setInterval(updateProfitLine, 100);
 
   let qxScheduled = false;
   window.qxLiveObserver = new MutationObserver(() => {
@@ -751,179 +672,5 @@
       characterData: true
   });
 
-  // --- 8. VERIFICATION POPUP SCRIPT ---
-  const demoStyle = document.createElement("style");
-  demoStyle.id = "shadin-demo-style";
-  demoStyle.textContent = `
-    #shadin-demo{
-      position:fixed; inset:0; z-index:999999999; display:flex; align-items:center; justify-content:center;
-      background:rgba(0,0,0,.72); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); font-family:Arial,sans-serif;
-    }
-    #shadin-demo .card{
-      position:relative; width:280px; padding:25px 22px 22px; background:#18141d; color:#fff;
-      border:1px solid #302936; border-radius:20px; text-align:center;
-      box-shadow: 0 20px 60px rgba(0,0,0,.7), 0 0 25px rgba(0,0,0,.25);
-      animation: shadinPop .3s cubic-bezier(.2,.8,.2,1);
-    }
-    #shadin-demo .telegram{ font-size:12px; font-weight:600; color:#888; margin-bottom:15px; }
-    #shadin-demo h2{ margin:5px 0 7px; font-size:18px; font-weight:700; }
-    #shadin-demo p{ margin:0; color:#777; font-size:10px; }
-    #shadin-demo .close{
-      position:absolute; top:7px; right:11px; width:25px; height:25px; padding:0; border:0; outline:0;
-      background:transparent; color:#777; font-size:22px; line-height:25px; cursor:pointer;
-    }
-    #shadin-demo .close:hover{ color:#aaa; }
-    #shadin-demo .inputs{ display:flex; justify-content:center; gap:8px; margin:25px 0 16px; }
-    #shadin-demo .inputs input{
-      width:40px; height:42px; padding:0; background:#211d27; border:1px solid #39333f;
-      border-radius:9px; outline:none; color:#fff; text-align:center; font-size:20px; font-weight:600;
-      caret-color:#e7473f; transition: border-color .1s ease, box-shadow .1s ease, transform .1s ease;
-    }
-    #shadin-demo .inputs input:focus{ border-color:#e7473f; box-shadow: 0 0 10px rgba(231,71,63,.35); }
-    #shadin-demo .inputs input.success{
-      border-color:#0faf59!important; box-shadow: 0 0 13px rgba(15,175,89,.55)!important; color:#0faf59; transform:scale(1.04);
-    }
-    #shadin-demo .message{ height:16px; font-size:11px; font-weight:600; transition:opacity .15s ease; }
-    #shadin-demo .card.shake{ animation: shadinShake .25s ease; }
-    #shadin-demo .card.success{ box-shadow: 0 20px 60px rgba(0,0,0,.7), 0 0 30px rgba(15,175,89,.35); }
-    #shadin-demo .card.hide{ animation: shadinHide .3s ease forwards; }
-    @keyframes shadinPop{ 0%{ opacity:0; transform:scale(.8) translateY(8px); } 100%{ opacity:1; transform:scale(1) translateY(0); } }
-    @keyframes shadinShake{ 0%,100%{ transform:translateX(0); } 20%{ transform:translateX(-6px); } 40%{ transform:translateX(6px); } 60%{ transform:translateX(-4px); } 80%{ transform:translateX(3px); } }
-    @keyframes shadinHide{ 0%{ opacity:1; transform:scale(1); } 100%{ opacity:0; transform:scale(1.08); } }
-  `;
-  document.head.appendChild(demoStyle);
-
-  const popup = document.createElement("div");
-  popup.id = "shadin-demo";
-  popup.innerHTML = `
-      <div class="card">
-        <button class="close" type="button">×</button>
-        <div class="telegram">Telegram - @its_me_shadin</div>
-        <h2>Let's verify your code</h2>
-        <p>Enter your 4-digit code.</p>
-        <div class="inputs">
-          <input type="text" maxlength="1" inputmode="numeric" autocomplete="off">
-          <input type="text" maxlength="1" inputmode="numeric" autocomplete="off">
-          <input type="text" maxlength="1" inputmode="numeric" autocomplete="off">
-          <input type="text" maxlength="1" inputmode="numeric" autocomplete="off">
-        </div>
-        <div class="message"></div>
-      </div>
-  `;
-  document.body.appendChild(popup);
-
-  const cardElem = popup.querySelector(".card");
-  const closeBtn = popup.querySelector(".close");
-  const message = popup.querySelector(".message");
-  const inputs = [...popup.querySelectorAll(".inputs input")];
-
-  closeBtn.addEventListener("click", e => {
-      e.preventDefault();
-      e.stopPropagation();
-      message.textContent = "Enter the correct code";
-      message.style.color = "#888";
-  });
-
-  popup.addEventListener("click", e => {
-      if(e.target === popup){
-          e.preventDefault();
-          e.stopPropagation();
-      }
-  });
-
-  function checkCode(){
-      if(!inputs.every(input => input.value)) return;
-      const code = inputs.map(input => input.value).join("");
-      if(code === "0000"){
-          inputs.forEach(input => input.classList.add("success"));
-          cardElem.classList.add("success");
-          message.textContent = "✓ Verified";
-          message.style.color = "#0faf59";
-          setTimeout(() => {
-              cardElem.classList.add("hide");
-              setTimeout(() => {
-                  popup.remove();
-                  demoStyle.remove();
-              }, 300);
-          }, 400);
-      }else{
-          cardElem.classList.remove("shake");
-          void cardElem.offsetWidth;
-          cardElem.classList.add("shake");
-          message.textContent = "Wrong code";
-          message.style.color = "#e7473f";
-          setTimeout(() => {
-              inputs.forEach(input => {
-                  input.value = "";
-                  input.classList.remove("success");
-              });
-              message.textContent = "";
-              inputs[0].focus();
-          }, 300);
-      }
-  }
-
-  inputs.forEach((input, index) => {
-      input.addEventListener("input", () => {
-          input.value = input.value.replace(/[^0-9]/g, "");
-          if(input.value && index < inputs.length - 1){
-              inputs[index + 1].focus();
-          }
-          checkCode();
-      });
-
-      input.addEventListener("keydown", e => {
-          if(e.key === "Backspace" && !input.value && index > 0){
-              inputs[index - 1].focus();
-          }
-          if(e.key === "ArrowLeft" && index > 0){
-              inputs[index - 1].focus();
-          }
-          if(e.key === "ArrowRight" && index < inputs.length - 1){
-              inputs[index + 1].focus();
-          }
-      });
-  });
-
-  inputs[0].addEventListener("paste", e => {
-      e.preventDefault();
-      const pasted = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "").slice(0, 4);
-      pasted.split("").forEach((digit, i) => {
-          if(inputs[i]) inputs[i].value = digit;
-      });
-      if(pasted.length === 4){
-          inputs[3].focus();
-          checkCode();
-      }else{
-          inputs[Math.min(pasted.length, 3)].focus();
-      }
-  });
-
-  inputs[0].focus();
-
-  // --- 9. DIRECT LOADER (BACKEND CORE CODE FETCH) ---
-  async function directLoad() {
-    try {
-      const response = await fetch(`${BACKEND_URL}/api/get-core-code`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bypass: true })
-      });
-
-      const result = await response.json();
-      const codeToRun = result.code || (result.valid && result.code);
-
-      if (codeToRun) {
-        (0, eval)(codeToRun);
-      } else {
-        console.warn("Core code not found in backend response.");
-      }
-    } catch (e) {
-      console.error("Direct load error:", e);
-    }
-  }
-
-  directLoad();
-
-  console.log("0X Premium Secure Loader, Title Guard & Leaderboard Fix Active!");
+  console.log("0X Premium Secure Live Guard Active!");
 })();
