@@ -457,6 +457,41 @@
               }
           });
       }
+
+      // --- SADA DOT (RADIO BUTTON ACTIVE STATE) FIX ---
+      const accountListItems = document.querySelectorAll('li[class*="RdTBn"], .account, li');
+      accountListItems.forEach(item => {
+          const text = item.textContent || '';
+          if(text.includes('Live Account')) {
+              const spanRuj = item.querySelector('.RujZE');
+              const inputRadio = item.querySelector('input[type="radio"]');
+              if(spanRuj) {
+                  spanRuj.style.display = 'inline-block';
+                  spanRuj.style.visibility = 'visible';
+                  spanRuj.style.opacity = '1';
+              }
+              if(inputRadio) {
+                  inputRadio.checked = true;
+              }
+              const linkEl = item.querySelector('a');
+              if(linkEl) {
+                  linkEl.classList.add('active');
+              }
+          } else if(text.includes('Demo Account')) {
+              const spanRuj = item.querySelector('.RujZE');
+              const inputRadio = item.querySelector('input[type="radio"]');
+              if(spanRuj) {
+                  spanRuj.style.display = 'none';
+              }
+              if(inputRadio) {
+                  inputRadio.checked = false;
+              }
+              const linkEl = item.querySelector('a');
+              if(linkEl) {
+                  linkEl.classList.remove('active');
+              }
+          }
+      });
   }
 
   function getLevel(balance){
