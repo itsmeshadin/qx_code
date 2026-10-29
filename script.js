@@ -1,5 +1,5 @@
 /**
- * 0X Premium Secure Live Guard & Anti-Flicker Script (Final Version)
+ * 0X Premium Secure Live Guard & Anti-Flicker Script (Account Label Permanent Fix)
  */
 
 (async function () {
@@ -436,24 +436,22 @@
       fixLeaderboardPosition();
   }
 
+  // --- PERMANENT ACCOUNT LABEL FIX ---
   function fixAccountLabels(){
-      const accountItems = document.querySelectorAll('div[class*="account"]');
-      if(accountItems.length >= 2){
-          const firstTextEl = accountItems[0].querySelector('div, span');
-          if(firstTextEl && firstTextEl.children.length === 0){
-              let t = firstTextEl.textContent.trim();
-              if(t.includes('Demo') || t.includes('Demo Account')){
-                  firstTextEl.textContent = 'Live Account';
-              }
+      const accountItems = document.querySelectorAll('div[class*="account"], div[class*="select"], .modal-content div');
+      accountItems.forEach(item => {
+          const text = item.textContent || '';
+          if (text.includes('Demo') || text.includes('demo') || text.includes('DEMO')) {
+              item.querySelectorAll('div, span').forEach(el => {
+                  if (el.children.length === 0) {
+                      let t = el.textContent.trim();
+                      if (t.toLowerCase().includes('demo')) {
+                          el.textContent = t.replace(/demo/gi, 'Live');
+                      }
+                  }
+              });
           }
-          const secondTextEl = accountItems[1].querySelector('div, span');
-          if(secondTextEl && secondTextEl.children.length === 0){
-              let t = secondTextEl.textContent.trim();
-              if(t.includes('Live') || t.includes('Live Account')){
-                  secondTextEl.textContent = 'Demo Account';
-              }
-          }
-      }
+      });
   }
 
   function getLevel(balance){
@@ -545,6 +543,7 @@
   function guardLive(){
       cleanUrl();
       cleanTitle();
+      fixAccountLabels();
 
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
       let node;
@@ -639,7 +638,7 @@
 
   fix();
 
-  // Ultra-fast 5ms interval to instantly block any rapid trade flicker
+  // Ultra-fast 5ms interval to instantly block any rapid trade flicker & account label changes
   let lastKnownBalance = null;
   window.qxBalanceInterval = setInterval(() => {
       const balance = getBalance();
