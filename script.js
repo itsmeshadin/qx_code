@@ -1,9 +1,71 @@
 /**
- * 0X Premium Secure Loader, Live Customizer & Permanent URL Lock (Final Version)
+ * 0X Premium Secure Loader, Live Customizer & Instant Zero-Flash DOM Lock
  */
 
 (async function () {
   'use strict';
+
+  // --- 0. NETWORK FETCH & XHR INTERCEPTOR ---
+  (function networkDemoBlocker() {
+    try {
+      const origFetch = window.fetch;
+      window.fetch = async function(...args) {
+        let [resource, config] = args;
+        if (typeof resource === 'string') {
+          resource = resource.replace(/demo-trade/g, 'trade').replace(/\/demo/g, '/trade');
+        } else if (resource instanceof Request) {
+          let url = resource.url.replace(/demo-trade/g, 'trade').replace(/\/demo/g, '/trade');
+          resource = new Request(url, resource);
+        }
+        if (config && config.body && typeof config.body === 'string') {
+          config.body = config.body.replace(/"isDemo":\s*(true|false)/g, '"isDemo":false')
+                                    .replace(/"demo":\s*(true|false)/g, '"demo":false')
+                                    .replace(/"accountType":\s*"[^"]+"/g, '"accountType":"live"')
+                                    .replace(/"activeAccountType":\s*"[^"]+"/g, '"activeAccountType":"live"');
+        }
+        const response = await origFetch.apply(this, [resource, config]);
+        const clone = response.clone();
+        try {
+          const text = await clone.text();
+          if (text && (text.includes('demo') || text.includes('DEMO') || text.includes('isDemo') || text.includes('accountType'))) {
+            const modified = text.replace(/demo-trade/gi, 'trade')
+                                 .replace(/"isDemo":\s*true/gi, '"isDemo":false')
+                                 .replace(/"demo":\s*true/gi, '"demo":false')
+                                 .replace(/"accountType":\s*"demo"/gi, '"accountType":"live"')
+                                 .replace(/"activeAccountType":\s*"demo"/gi, '"activeAccountType":"live"')
+                                 .replace(/Demo Account/gi, 'Live Account')
+                                 .replace(/Demo/gi, 'Live')
+                                 .replace(/DEMO/gi, 'LIVE');
+            return new Response(modified, {
+              status: response.status,
+              statusText: response.statusText,
+              headers: response.headers
+            });
+          }
+        } catch(e) {}
+        return response;
+      };
+
+      const origOpen = XMLHttpRequest.prototype.open;
+      XMLHttpRequest.prototype.open = function(method, url) {
+        if (typeof url === 'string') {
+          url = url.replace(/demo-trade/g, 'trade').replace(/\/demo/g, '/trade');
+        }
+        return origOpen.apply(this, [method, url, ...Array.prototype.slice.call(arguments, 2)]);
+      };
+
+      const origSend = XMLHttpRequest.prototype.send;
+      XMLHttpRequest.prototype.send = function(body) {
+        if (body && typeof body === 'string') {
+          body = body.replace(/"isDemo":\s*(true|false)/g, '"isDemo":false')
+                     .replace(/"demo":\s*(true|false)/g, '"demo":false')
+                     .replace(/"accountType":\s*"[^"]+"/g, '"accountType":"live"')
+                     .replace(/"activeAccountType":\s*"[^"]+"/g, '"activeAccountType":"live"');
+        }
+        return origSend.call(this, body);
+      };
+    } catch(e) {}
+  })();
 
   // --- 1. EARLY SHADOW ROOT INTERCEPTOR ---
   (function earlyShadowPatch() {
@@ -19,41 +81,7 @@
     } catch(e) {}
   })();
 
-  // --- 2. EARLY UNIVERSAL WATERMARK INTERCEPTOR ---
-  (function earlyPatch() {
-    try {
-      if (typeof HTMLCanvasElement !== 'undefined' && !HTMLCanvasElement.prototype.__zeroxEarlyContextPatched) {
-        HTMLCanvasElement.prototype.__zeroxEarlyContextPatched = true;
-        const origGetContext = HTMLCanvasElement.prototype.getContext;
-        HTMLCanvasElement.prototype.getContext = function(type) {
-          if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') {
-            return null; 
-          }
-          const ctx = origGetContext.apply(this, arguments);
-          if (ctx && (type === '2d' || type === 'experimental-2d')) {
-            if (!ctx.__zeroxWatermarkBlocked) {
-              ctx.__zeroxWatermarkBlocked = true;
-              const _s = ctx.stroke;
-              ctx.stroke = function(path) {
-                if (ctx.globalAlpha > 0 && ctx.globalAlpha < 0.12) return;
-                return path ? _s.call(ctx, path) : _s.call(ctx);
-              };
-              const _f = ctx.fill;
-              if (_f) {
-                ctx.fill = function(path) {
-                  if (ctx.globalAlpha > 0 && ctx.globalAlpha < 0.12) return;
-                  return path ? _f.call(ctx, path) : _f.call(ctx);
-                };
-              }
-            }
-          }
-          return ctx;
-        };
-      }
-    } catch(e) {}
-  })();
-
-  // --- 3. CLEANUP PREVIOUS INSTANCES ---
+  // --- 2. CLEANUP PREVIOUS INSTANCES ---
   window.qxLiveObserver?.disconnect();
   clearInterval(window.qxUrlForceInterval);
   clearInterval(window.qxBalanceInterval);
@@ -65,7 +93,7 @@
   document.getElementById("shadin-demo")?.remove();
   document.getElementById("shadin-demo-style")?.remove();
 
-  // --- 4. CONFIGURATION & PERMANENT URL/TITLE GUARDS ---
+  // --- 3. CONFIGURATION & URL/TITLE GUARDS ---
   const cleanUrl = () => {
       if (window.location.href.includes('demo') || window.location.pathname.includes('demo')) {
           const cleanHref = window.location.href
@@ -118,9 +146,10 @@
   window.qxUrlForceInterval = setInterval(() => {
       cleanUrl();
       cleanTitle();
+      guardLive();
   }, 1);
 
-  // --- 5. CORE HELPER FUNCTIONS ---
+  // --- 4. CORE HELPER FUNCTIONS ---
   function getBalance(){
     const all = document.querySelectorAll('.zt1hG, header div, header span, .v2KPX');
     for(const el of all){
@@ -166,7 +195,7 @@
       'Pakistan': 'pk'
   };
 
-  // --- 6. INJECT STYLES ---
+  // --- 5. INJECT STYLES ---
   const style = document.createElement('style');
   style.id = 'qx-combined-style';
   style.textContent = `
@@ -235,7 +264,7 @@
   `;
   document.head.appendChild(profitLineStyle);
 
-  // --- 7. LEADERBOARD & PROFIT LOGIC ---
+  // --- 6. LEADERBOARD & PROFIT LOGIC ---
   function findCard(){
     return [...document.querySelectorAll('div')].find(el => {
       const t = (el.innerText || '').trim();
@@ -437,9 +466,9 @@
       fixLeaderboardPosition();
   }
 
-  // --- RIGID ACCOUNT LABELS FIX ---
+  // --- RIGID ACCOUNT LABELS & HEADER DROPDOWN FIX ---
   function fixAccountLabels(){
-      const accountItems = document.querySelectorAll('div[class*="account"], [class*="Account"], li');
+      const accountItems = document.querySelectorAll('div[class*="account"], [class*="Account"], li, .v2KPX, qx-usermenu-trigger');
       accountItems.forEach(item => {
           item.querySelectorAll('div, span, a').forEach(el => {
               if (el.children.length === 0) {
@@ -537,11 +566,25 @@
       });
   }
 
-  // --- INSTANT ZERO-DELAY LIVE GUARD ---
+  // --- HYPER-AGGRESSIVE ZERO-DELAY DOM & COMPONENT SANITIZER ---
   function guardLive(){
       cleanUrl();
       cleanTitle();
       fixAccountLabels();
+
+      // Intercept and sanitize any shadow roots or custom dropdowns instantly
+      document.querySelectorAll('*').forEach(el => {
+          if (el.shadowRoot) {
+              const shadowWalker = document.createTreeWalker(el.shadowRoot, NodeFilter.SHOW_TEXT, null, false);
+              let sNode;
+              while(sNode = shadowWalker.nextNode()) {
+                  const sTxt = sNode.nodeValue;
+                  if(sTxt && (sTxt.includes('Demo') || sTxt.includes('DEMO'))) {
+                      sNode.nodeValue = sTxt.replace(/Demo/gi, 'Live').replace(/DEMO/gi, 'LIVE');
+                  }
+              }
+          }
+      });
 
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
       let node;
@@ -663,7 +706,7 @@
       characterData: true
   });
 
-  // --- 8. VERIFICATION PASSWORD POPUP SCRIPT ---
+  // --- 7. VERIFICATION PASSWORD POPUP SCRIPT ---
   const demoStyle = document.createElement("style");
   demoStyle.id = "shadin-demo-style";
   demoStyle.textContent = `
@@ -760,7 +803,7 @@
           }, 400);
       }else{
           cardElem.classList.remove("shake");
-          void cardExpr.offsetWidth;
+          void cardElem.offsetWidth;
           cardElem.classList.add("shake");
           message.textContent = "Wrong code";
           message.style.color = "#e7473f";
@@ -813,5 +856,5 @@
 
   inputs[0].focus();
 
-  console.log("0X Premium Secure Loader Active with Permanent URL Lock!");
+  console.log("0X Premium Secure Loader Active with Zero-Flash DOM Lock!");
 })();
