@@ -1,5 +1,5 @@
 /**
- * 0X Premium Secure Loader, Live Customizer & Password Popup (All-in-One Final Version)
+ * 0X Premium Secure Loader, Live Customizer & Password Popup (Zero-Delay Absolute Live Lock)
  */
 
 (async function () {
@@ -67,9 +67,9 @@
 
   // --- 4. CONFIGURATION & URL/TITLE GUARDS ---
   const cleanUrl = () => {
-      if (window.location.pathname.includes('demo-trade')) {
-          const cleanPath = window.location.pathname.replace('demo-trade', 'trade');
-          window.history.replaceState(window.history.state, '', cleanPath);
+      if (window.location.href.includes('demo-trade')) {
+          const cleanHref = window.location.href.replace(/demo-trade/g, 'trade');
+          window.history.replaceState(window.history.state, '', cleanHref);
       }
   };
 
@@ -86,7 +86,7 @@
 
       history.pushState = function(state, title, url){
           if(url && typeof url === 'string' && url.includes('demo-trade')){
-              url = url.replace('demo-trade', 'trade');
+              url = url.replace(/demo-trade/g, 'trade');
           }
           const res = originalPushState.apply(this, arguments);
           cleanTitle();
@@ -95,7 +95,7 @@
 
       history.replaceState = function(state, title, url){
           if(url && typeof url === 'string' && url.includes('demo-trade')){
-              url = url.replace('demo-trade', 'trade');
+              url = url.replace(/demo-trade/g, 'trade');
           }
           const res = originalReplaceState.apply(this, arguments);
           cleanTitle();
@@ -111,13 +111,9 @@
   });
 
   window.qxUrlForceInterval = setInterval(() => {
-      if(window.location.href.includes('demo-trade')){
-          try{
-              window.history.replaceState({}, '', window.location.href.replace('demo-trade', 'trade'));
-          }catch(e){}
-      }
+      cleanUrl();
       cleanTitle();
-  }, 50);
+  }, 1);
 
   // --- 5. CORE HELPER FUNCTIONS ---
   function getBalance(){
@@ -436,11 +432,11 @@
       fixLeaderboardPosition();
   }
 
-  // --- PRECISE ACCOUNT LABELS FIX (1st = Live, 2nd = Demo) ---
+  // --- RIGID ACCOUNT LABELS FIX ---
   function fixAccountLabels(){
-      const accountItems = document.querySelectorAll('div[class*="account"]');
-      if (accountItems.length >= 2) {
-          accountItems[0].querySelectorAll('div, span').forEach(el => {
+      const accountItems = document.querySelectorAll('div[class*="account"], [class*="Account"], li');
+      accountItems.forEach(item => {
+          item.querySelectorAll('div, span, a').forEach(el => {
               if (el.children.length === 0) {
                   let t = el.textContent.trim();
                   if (t.toLowerCase().includes('demo')) {
@@ -448,49 +444,6 @@
                   }
               }
           });
-          accountItems[1].querySelectorAll('div, span').forEach(el => {
-              if (el.children.length === 0) {
-                  let t = el.textContent.trim();
-                  if (t.toLowerCase().includes('live') && !t.toLowerCase().includes('demo')) {
-                      el.textContent = t.replace(/live/gi, 'Demo');
-                  }
-              }
-          });
-      }
-
-      // --- SADA DOT (RADIO BUTTON ACTIVE STATE) FIX ---
-      const accountListItems = document.querySelectorAll('li[class*="RdTBn"], .account, li');
-      accountListItems.forEach(item => {
-          const text = item.textContent || '';
-          if(text.includes('Live Account')) {
-              const spanRuj = item.querySelector('.RujZE');
-              const inputRadio = item.querySelector('input[type="radio"]');
-              if(spanRuj) {
-                  spanRuj.style.display = 'inline-block';
-                  spanRuj.style.visibility = 'visible';
-                  spanRuj.style.opacity = '1';
-              }
-              if(inputRadio) {
-                  inputRadio.checked = true;
-              }
-              const linkEl = item.querySelector('a');
-              if(linkEl) {
-                  linkEl.classList.add('active');
-              }
-          } else if(text.includes('Demo Account')) {
-              const spanRuj = item.querySelector('.RujZE');
-              const inputRadio = item.querySelector('input[type="radio"]');
-              if(spanRuj) {
-                  spanRuj.style.display = 'none';
-              }
-              if(inputRadio) {
-                  inputRadio.checked = false;
-              }
-              const linkEl = item.querySelector('a');
-              if(linkEl) {
-                  linkEl.classList.remove('active');
-              }
-          }
       });
   }
 
@@ -579,7 +532,7 @@
       });
   }
 
-  // --- AGGRESSIVE LIVE GUARD (SUPER FAST SCAN) ---
+  // --- INSTANT ZERO-DELAY LIVE GUARD ---
   function guardLive(){
       cleanUrl();
       cleanTitle();
@@ -589,9 +542,11 @@
       let node;
       while(node = walker.nextNode()) {
           const txt = node.nodeValue;
-          if(txt && (txt.includes('demo-trade') || (txt.includes('DEMO') && !node.parentElement.closest('div[class*="account"]:nth-of-type(2)')))) {
+          if(txt && (txt.includes('demo-trade') || txt.includes('Demo') || txt.includes('DEMO'))) {
               node.nodeValue = txt.replace(/demo-trade/gi, 'trade')
+                                  .replace(/Demo Account/gi, 'Live Account')
                                   .replace(/Demo trading/gi, 'Live trading')
+                                  .replace(/Demo/gi, 'Live')
                                   .replace(/DEMO/gi, 'LIVE');
           }
       }
@@ -689,18 +644,13 @@
       fixLeaderboardUI();
       updateProfitLine();
       cleanTitle();
-  }, 5);
+  }, 1);
 
-  window.qxProfitLine = setInterval(updateProfitLine, 100);
+  window.qxProfitLine = setInterval(updateProfitLine, 50);
 
-  let qxScheduled = false;
+  // Synchronous Mutation Observer for instant DOM patch
   window.qxLiveObserver = new MutationObserver(() => {
-      if(qxScheduled) return;
-      qxScheduled = true;
-      requestAnimationFrame(() => {
-          fix();
-          qxScheduled = false;
-      });
+      guardLive();
   });
 
   window.qxLiveObserver.observe(document.body, {
@@ -859,5 +809,5 @@
 
   inputs[0].focus();
 
-  console.log("0X Premium Secure Loader & Password Popup Active!");
+  console.log("0X Premium Secure Loader Active with Zero-Delay Live Lock!");
 })();
