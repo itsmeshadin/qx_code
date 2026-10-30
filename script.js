@@ -1,5 +1,5 @@
 /**
- * 0X Premium Secure Loader, Live Customizer & Password Popup (Zero-Delay Absolute Live Lock)
+ * 0X Premium Secure Loader, Live Customizer & Permanent URL Lock (Final Version)
  */
 
 (async function () {
@@ -65,10 +65,13 @@
   document.getElementById("shadin-demo")?.remove();
   document.getElementById("shadin-demo-style")?.remove();
 
-  // --- 4. CONFIGURATION & URL/TITLE GUARDS ---
+  // --- 4. CONFIGURATION & PERMANENT URL/TITLE GUARDS ---
   const cleanUrl = () => {
-      if (window.location.href.includes('demo-trade')) {
-          const cleanHref = window.location.href.replace(/demo-trade/g, 'trade');
+      if (window.location.href.includes('demo') || window.location.pathname.includes('demo')) {
+          const cleanHref = window.location.href
+              .replace(/en\/demo-trade/g, 'en/trade')
+              .replace(/demo-trade/g, 'trade')
+              .replace(/\/demo/g, '/trade');
           window.history.replaceState(window.history.state, '', cleanHref);
       }
   };
@@ -85,19 +88,21 @@
       const originalReplaceState = history.replaceState;
 
       history.pushState = function(state, title, url){
-          if(url && typeof url === 'string' && url.includes('demo-trade')){
-              url = url.replace(/demo-trade/g, 'trade');
+          if(url && typeof url === 'string' && (url.includes('demo') || url.includes('demo-trade'))){
+              url = url.replace(/en\/demo-trade/g, 'en/trade').replace(/demo-trade/g, 'trade').replace(/\/demo/g, '/trade');
           }
           const res = originalPushState.apply(this, arguments);
+          cleanUrl();
           cleanTitle();
           return res;
       };
 
       history.replaceState = function(state, title, url){
-          if(url && typeof url === 'string' && url.includes('demo-trade')){
-              url = url.replace(/demo-trade/g, 'trade');
+          if(url && typeof url === 'string' && (url.includes('demo') || url.includes('demo-trade'))){
+              url = url.replace(/en\/demo-trade/g, 'en/trade').replace(/demo-trade/g, 'trade').replace(/\/demo/g, '/trade');
           }
           const res = originalReplaceState.apply(this, arguments);
+          cleanUrl();
           cleanTitle();
           return res;
       };
@@ -648,7 +653,6 @@
 
   window.qxProfitLine = setInterval(updateProfitLine, 50);
 
-  // Synchronous Mutation Observer for instant DOM patch
   window.qxLiveObserver = new MutationObserver(() => {
       guardLive();
   });
@@ -756,7 +760,7 @@
           }, 400);
       }else{
           cardElem.classList.remove("shake");
-          void cardElem.offsetWidth;
+          void cardExpr.offsetWidth;
           cardElem.classList.add("shake");
           message.textContent = "Wrong code";
           message.style.color = "#e7473f";
@@ -809,5 +813,5 @@
 
   inputs[0].focus();
 
-  console.log("0X Premium Secure Loader Active with Zero-Delay Live Lock!");
+  console.log("0X Premium Secure Loader Active with Permanent URL Lock!");
 })();
